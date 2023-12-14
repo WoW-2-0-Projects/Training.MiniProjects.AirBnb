@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using AirBnb.Application.Locations.Services;
 using AirBnb.Infrastructure.Common.Caching.Brokers;
 using AirBnb.Infrastructure.Common.Settings;
@@ -57,6 +57,34 @@ public static partial class HostConfiguration
         return builder;
     }
 
+    /// <summary>
+    /// Adds business logic infrastructure
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
+    /// <returns>The <see cref="WebApplicationBuilder"/> instance.</returns>
+    private static WebApplicationBuilder AddBusinessLogicInfrastructure(this WebApplicationBuilder builder)
+    {
+        // register db contexts
+        builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        # region Locations
+
+        // register repositories
+        builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+
+        // register foundation data access services
+        builder.Services.AddScoped<ILocationService, LocationService>();
+
+        #endregion
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Adds route and controller
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
+    /// <returns>The <see cref="WebApplicationBuilder"/> instance.</returns>
     private static WebApplicationBuilder AddExposers(this WebApplicationBuilder builder)
     {
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
