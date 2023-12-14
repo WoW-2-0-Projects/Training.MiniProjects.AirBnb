@@ -4,7 +4,7 @@ public static partial class HostConfiguration
 {
     public static ValueTask<WebApplicationBuilder> ConfigureAsync(this WebApplicationBuilder builder)
     {
-        builder.AddMappers().AddExposers();
+        builder.AddMappers().AddCaching().AddBusinessLogicInfrastructure().AddExposers();
 
         return new(builder);
     }
