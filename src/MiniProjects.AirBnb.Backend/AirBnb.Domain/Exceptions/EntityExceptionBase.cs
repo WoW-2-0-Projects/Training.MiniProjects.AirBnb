@@ -7,7 +7,7 @@ namespace AirBnb.Domain.Exceptions;
 /// </summary>
 public class EntityExceptionBase(
     Guid entityId,
-    string message,
+    string? message = default,
     Exception? innerException = default,
     ExceptionVisibility visibility = ExceptionVisibility.Public
 ) : ExceptionBase(message, innerException, visibility)

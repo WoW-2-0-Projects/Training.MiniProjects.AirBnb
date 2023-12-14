@@ -6,9 +6,13 @@ namespace AirBnb.Domain.Exceptions;
 /// <summary>
 /// Represents entity conflict exception
 /// </summary>
-public class EntityConflictException<TEntity>(Guid entityId, Exception innerException) : EntityExceptionBase(
+public class EntityConflictException<TEntity>(
+    Guid entityId,
+    Exception innerException,
+    ExceptionVisibility exceptionVisibility = ExceptionVisibility.Protected
+) : EntityExceptionBase(
     entityId,
     $"Entity {typeof(TEntity).Name} with id {entityId} has conflicts to execute this operation",
     innerException,
-    ExceptionVisibility.Protected
+    exceptionVisibility
 ) where TEntity : IEntity;
