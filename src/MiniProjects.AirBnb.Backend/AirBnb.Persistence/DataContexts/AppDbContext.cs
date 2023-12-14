@@ -5,6 +5,8 @@ namespace AirBnb.Persistence.DataContexts;
 
 public class AppDbContext : DbContext
 {
+    public DbSet<Location> Locations => Set<Location>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }

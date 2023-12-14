@@ -24,14 +24,9 @@ public class EntityRepositoryBase<TEntity, TContext>(TContext dbContext, ICacheB
     /// Retrieves a list of entities based on query specification.
     /// </summary>
     /// <param name="querySpecification">The query specification to apply.</param>
-    /// <param name="asNoTracking">Determines whether to track returned entities</param>
-    /// <param name="cancellationToken">Cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>A list of entities that match the given query specification.</returns>
-    protected async ValueTask<IList<TEntity>> GetAsync(
-        QuerySpecification<TEntity> querySpecification,
-        bool asNoTracking = false,
-        CancellationToken cancellationToken = default
-    )
+    protected async ValueTask<IList<TEntity>> GetAsync(QuerySpecification<TEntity> querySpecification, CancellationToken cancellationToken = default)
     {
         var foundEntities = new List<TEntity>();
         var cacheKey = querySpecification.CacheKey;
@@ -40,7 +35,7 @@ public class EntityRepositoryBase<TEntity, TContext>(TContext dbContext, ICacheB
         {
             var initialQuery = DbContext.Set<TEntity>().AsQueryable();
 
-            if (asNoTracking) initialQuery = initialQuery.AsNoTracking();
+            if (querySpecification.AsNoTracking) initialQuery = initialQuery.AsNoTracking();
             initialQuery = initialQuery.ApplySpecification(querySpecification);
             foundEntities = await initialQuery.ToListAsync(cancellationToken);
             if (cacheEntryOptions is not null) await cacheBroker.SetAsync(cacheKey, foundEntities, cacheEntryOptions);

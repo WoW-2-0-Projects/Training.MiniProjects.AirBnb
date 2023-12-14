@@ -10,7 +10,7 @@ namespace AirBnb.Domain.Common.Query;
 /// Represents a query specification for retrieving entities from a cache.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity.</typeparam>
-public class QuerySpecification<TEntity>(uint pageSize, uint pageToken) : CacheModel where TEntity : IEntity
+public class QuerySpecification<TEntity>(uint pageSize, uint pageToken, bool asNoTracking) : CacheModel where TEntity : IEntity
 {
     /// <summary>
     /// Gets filtering options collection for query.
@@ -26,6 +26,8 @@ public class QuerySpecification<TEntity>(uint pageSize, uint pageToken) : CacheM
     /// Gets pagination options for query.
     /// </summary>
     public FilterPagination PaginationOptions { get; } = new(pageSize, pageToken);
+
+    public bool AsNoTracking { get; } = asNoTracking;
 
     public override int GetHashCode()
     {
