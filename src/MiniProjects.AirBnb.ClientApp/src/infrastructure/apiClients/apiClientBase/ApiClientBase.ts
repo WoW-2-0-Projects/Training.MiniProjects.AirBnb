@@ -1,7 +1,6 @@
 import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import axios from "axios";
 import { ApiResponse } from "@/infrastructure/apiClients/apiClientBase/ApiResponse";
-import type { ProblemDetails } from "@/infrastructure/apiClients/apiClientBase/ProblemDetails";
 
 export default class ApiClientBase {
     public readonly client: AxiosInstance;
