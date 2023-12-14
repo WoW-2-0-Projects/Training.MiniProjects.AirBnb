@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using AirBnb.Domain.Common.Entities;
 using AirBnb.Domain.Exceptions;
+using AirBnb.Domain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -61,30 +62,7 @@ public class EntityRepositoryBase<TEntity, TContext> where TEntity : class, IEnt
         if (asNoTracking)
             initialQuery = initialQuery.AsNoTracking();
 
-        return await initialQuery.SingleOrDefaultAsync(entity => entity.Id == id, cancellationToken: cancellationToken);
-    }
-
-    /// <summary>
-    /// Gets multiple instances of <see cref="TEntity"/> by ids
-    /// </summary>
-    /// <param name="ids">Ids of entities to query</param>
-    /// <param name="asNoTracking">Determines whether to track returned entities</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task that returns collection of entity instances, otherwise null</returns>
-    protected async ValueTask<IList<TEntity>> GetByIdsAsync(
-        IEnumerable<Guid> ids,
-        bool asNoTracking = false,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var initialQuery = DbContext.Set<TEntity>().Where(entity => true);
-
-        if (asNoTracking)
-            initialQuery = initialQuery.AsNoTracking();
-
-        initialQuery = initialQuery.Where(entity => ids.Contains(entity.Id));
-
-        return await initialQuery.ToListAsync(cancellationToken: cancellationToken);
+        return await ExecuteAsync(id, () => initialQuery.SingleOrDefaultAsync(entity => entity.Id == id, cancellationToken: cancellationToken));
     }
 
     /// <summary>
@@ -101,7 +79,7 @@ public class EntityRepositoryBase<TEntity, TContext> where TEntity : class, IEnt
         await DbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
 
         if (saveChanges)
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
 
         return entity;
     }
@@ -118,7 +96,7 @@ public class EntityRepositoryBase<TEntity, TContext> where TEntity : class, IEnt
         DbContext.Set<TEntity>().Update(entity);
 
         if (saveChanges)
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
 
         return entity;
     }
@@ -135,7 +113,7 @@ public class EntityRepositoryBase<TEntity, TContext> where TEntity : class, IEnt
         DbContext.Set<TEntity>().Remove(entity);
 
         if (saveChanges)
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
 
         return entity;
     }
@@ -151,13 +129,93 @@ public class EntityRepositoryBase<TEntity, TContext> where TEntity : class, IEnt
     protected async ValueTask<TEntity?> DeleteByIdAsync(Guid id, bool saveChanges = true, CancellationToken cancellationToken = default)
     {
         var entity = await DbContext.Set<TEntity>().FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken) ??
-                     throw new InvalidOperationException();
+                     throw new EntityEntryNotFoundException<TEntity>(id);
 
         DbContext.Set<TEntity>().Remove(entity);
 
         if (saveChanges)
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
 
         return entity;
+    }
+
+    /// <summary>
+    /// Executes the given data access function asynchronously.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <typeparam name="T">The return type of the data access function.</typeparam>
+    /// <param name="entityId">Id of entity</param>
+    /// <param name="dataAccessFunc">The data access function to execute.</param>
+    /// <returns>
+    /// The result of the data access function.
+    /// </returns>
+    /// <exception cref="Exception">Thrown if the execution of the data access function fails.</exception>
+    private static async ValueTask<T?> ExecuteAsync<T>(Guid entityId, Func<ValueTask<T?>> dataAccessFunc)
+    {
+        var result = await dataAccessFunc.GetValueAsync();
+        if (!result.IsSuccess)
+            throw MapEfCoreException(entityId, result.Exception!);
+
+        return result.Data;
+    }
+
+    /// <summary>
+    /// Executes the given data access function asynchronously.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <typeparam name="T">The return type of the data access function.</typeparam>
+    /// <param name="entityId">Id of entity</param>
+    /// <param name="dataAccessFunc">The data access function to execute.</param>
+    /// <returns>
+    /// The result of the data access function.
+    /// </returns>
+    /// <exception cref="Exception">Thrown if the execution of the data access function fails.</exception>
+    private static async ValueTask<T?> ExecuteAsync<T>(Guid entityId, Func<Task<T?>> dataAccessFunc)
+    {
+        var result = await dataAccessFunc.GetValueAsync();
+        if (!result.IsSuccess)
+            throw MapEfCoreException(entityId, result.Exception!);
+
+        return result.Data;
+    }
+
+    /// <summary>
+    /// Maps the given Entity Framework Core exception to a custom exception based on the entity and the exception type.
+    /// </summary>
+    /// <param name="entityId">Id of entity</param>
+    /// <param name="exception">The original Entity Framework Core exception.</param>
+    /// <returns>The mapped exception.</returns>
+    private static Exception MapEfCoreException(Guid entityId, Exception exception)
+    {
+        return exception switch
+        {
+            DbUpdateConcurrencyException dbUpdateConcurrencyException => new EntityConflictException<TEntity>(entityId, dbUpdateConcurrencyException),
+            DbUpdateException dbUpdateException => MapDbUpdateException(entityId, dbUpdateException),
+            _ => exception
+        };
+    }
+
+    /// <summary>
+    /// Maps a <see cref="DbUpdateException"/> to the corresponding entity exception.
+    /// </summary>
+    /// <param name="entityId">Id of entity</param>
+    /// <param name="exception">The <see cref="DbUpdateException"/> to be handled.</param>
+    /// <returns>The mapped <see cref="Exception"/>.</returns>
+    /// <exception cref="EntityConflictException{TEntity}">Thrown when the <paramref name="exception"/> represents a foreign key or unique constraint violation.</exception>
+    /// <exception cref="EntityExceptionBase">Thrown when the <paramref name="exception"/> is not related to a constraint violation.</exception>
+    private static EntityExceptionBase MapDbUpdateException(Guid entityId, DbUpdateException exception)
+    {
+        if (exception.InnerException is not NpgsqlException postgresException)
+            return new EntityExceptionBase(entityId, innerException: exception);
+
+        switch (postgresException.ErrorCode)
+        {
+            case 547: // foreign key constraint violation
+            case 2601: // unique constraint violation for index
+            case 2627: // unique constraint violation for primary key
+                throw new EntityConflictException<TEntity>(entityId, exception);
+            default:
+                throw new EntityExceptionBase(entityId, innerException: exception);
+        }
     }
 }

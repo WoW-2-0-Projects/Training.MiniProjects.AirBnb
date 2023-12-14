@@ -1,10 +1,10 @@
-﻿using Notifications.Infrastructure.Domain.Common.Exceptions;
+﻿using AirBnb.Domain.Common.Exceptions;
 
-namespace Notifications.Infrastructure.Domain.Extensions;
+namespace AirBnb.Domain.Extensions;
 
 public static class ExceptionExtensions
 {
-    public static async ValueTask<FuncResult<T>> GetValueAsync<T>(this Func<Task<T>> func) where T : struct
+    public static async ValueTask<FuncResult<T>> GetValueAsync<T>(this Func<Task<T>> func)
     {
         FuncResult<T> result;
 
@@ -19,8 +19,8 @@ public static class ExceptionExtensions
 
         return result;
     }
-    
-    public static async ValueTask<FuncResult<T>> GetValueAsync<T>(this Func<ValueTask<T>> func) where T : struct
+
+    public static async ValueTask<FuncResult<T>> GetValueAsync<T>(this Func<ValueTask<T>> func)
     {
         FuncResult<T> result;
 
