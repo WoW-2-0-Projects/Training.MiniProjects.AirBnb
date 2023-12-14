@@ -1,7 +1,10 @@
 using System.Linq.Expressions;
 using AirBnb.Domain.Common.Entities;
+using AirBnb.Domain.Common.Query;
 using AirBnb.Domain.Exceptions;
 using AirBnb.Domain.Extensions;
+using AirBnb.Persistence.Caching.Brokers;
+using AirBnb.Persistence.Caching.Models;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -12,151 +15,40 @@ namespace AirBnb.Persistence.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Type of entity</typeparam>
 /// <typeparam name="TContext">Type of context</typeparam>
-public class EntityRepositoryBase<TEntity, TContext> where TEntity : class, IEntity where TContext : DbContext
+public class EntityRepositoryBase<TEntity, TContext>(TContext dbContext, ICacheBroker cacheBroker, CacheEntryOptions? cacheEntryOptions = default)
+    where TEntity : class, IEntity where TContext : DbContext
 {
-    /// <summary>
-    /// Gets using <see cref="DbContext"/> instance
-    /// </summary>
-    protected TContext DbContext => (TContext)_dbContext;
+    protected TContext DbContext => dbContext;
 
     /// <summary>
-    /// Stores <see cref="DbContext"/> instance
+    /// Retrieves a list of entities based on query specification.
     /// </summary>
-    private readonly DbContext _dbContext;
-
-    protected EntityRepositoryBase(TContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    /// <summary>
-    /// Gets queryable of <see cref="TEntity"/>
-    /// </summary>
-    /// <param name="predicate">Predicate to filter</param>
-    /// <param name="asNoTracking">Determines whether to track returned entities</param>
-    /// <returns>Queryable of <see cref="TEntity"/></returns>
-    protected IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? predicate = default, bool asNoTracking = false)
-    {
-        var initialQuery = DbContext.Set<TEntity>().Where(entity => true);
-
-        if (predicate is not null)
-            initialQuery = initialQuery.Where(predicate);
-
-        if (asNoTracking)
-            initialQuery = initialQuery.AsNoTracking();
-
-        return initialQuery;
-    }
-
-    /// <summary>
-    /// Gets instance of <see cref="TEntity"/> by id
-    /// </summary>
-    /// <param name="id">Id of entity to query</param>
+    /// <param name="querySpecification">The query specification to apply.</param>
     /// <param name="asNoTracking">Determines whether to track returned entities</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Entity instance if exists, otherwise null</returns>
-    protected async ValueTask<TEntity?> GetByIdAsync(Guid id, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    /// <returns>A list of entities that match the given query specification.</returns>
+    protected async ValueTask<IList<TEntity>> GetAsync(
+        QuerySpecification<TEntity> querySpecification,
+        bool asNoTracking = false,
+        CancellationToken cancellationToken = default
+    )
     {
-        var initialQuery = DbContext.Set<TEntity>().Where(entity => true);
+        var foundEntities = new List<TEntity>();
+        var cacheKey = querySpecification.CacheKey;
 
-        if (asNoTracking)
-            initialQuery = initialQuery.AsNoTracking();
+        if (cacheEntryOptions is null || !await cacheBroker.TryGetAsync<List<TEntity>>(cacheKey, out var cachedEntities))
+        {
+            var initialQuery = DbContext.Set<TEntity>().AsQueryable();
 
-        return await ExecuteAsync(id, () => initialQuery.SingleOrDefaultAsync(entity => entity.Id == id, cancellationToken: cancellationToken));
-    }
+            if (asNoTracking) initialQuery = initialQuery.AsNoTracking();
+            initialQuery = initialQuery.ApplySpecification(querySpecification);
+            foundEntities = await initialQuery.ToListAsync(cancellationToken);
+            if (cacheEntryOptions is not null) await cacheBroker.SetAsync(cacheKey, foundEntities, cacheEntryOptions);
+        }
+        else if (cachedEntities is not null)
+            foundEntities = cachedEntities;
 
-    /// <summary>
-    /// Creates new instance of <see cref="TEntity"/>
-    /// </summary>
-    /// <param name="entity">Instance of entity to create</param>
-    /// <param name="saveChanges">Determines whether save changes to context or to database</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task that returns created entity instance</returns>
-    protected async ValueTask<TEntity> CreateAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
-    {
-        entity.Id = Guid.Empty;
-
-        await DbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
-
-        if (saveChanges)
-            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
-
-        return entity;
-    }
-
-    /// <summary>
-    /// Updates existing instance of <see cref="TEntity"/>
-    /// </summary>
-    /// <param name="entity">Entity to update</param>
-    /// <param name="saveChanges">Determines whether save changes to context or to database</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task that returns updated entity instance</returns>
-    protected async ValueTask<TEntity> UpdateAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
-    {
-        DbContext.Set<TEntity>().Update(entity);
-
-        if (saveChanges)
-            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
-
-        return entity;
-    }
-
-    /// <summary>
-    /// Deletes existing instance of <see cref="TEntity"/>
-    /// </summary>
-    /// <param name="entity">Entity to delete</param>
-    /// <param name="saveChanges">Determines whether save changes to context or to database</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task that returns deleted entity instance if soft deletion is used, otherwise null</returns>
-    protected async ValueTask<TEntity?> DeleteAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
-    {
-        DbContext.Set<TEntity>().Remove(entity);
-
-        if (saveChanges)
-            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
-
-        return entity;
-    }
-
-    /// <summary>
-    /// Deletes existing instance of <see cref="TEntity"/> by id
-    /// </summary>
-    /// <param name="id">Id of entity to delete</param>
-    /// <param name="saveChanges">Determines whether save changes to context or to database</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task that returns deleted entity instance if soft deletion is used, otherwise null</returns>
-    /// <exception cref="InvalidOperationException">If entity is not found</exception>
-    protected async ValueTask<TEntity?> DeleteByIdAsync(Guid id, bool saveChanges = true, CancellationToken cancellationToken = default)
-    {
-        var entity = await DbContext.Set<TEntity>().FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken) ??
-                     throw new EntityEntryNotFoundException<TEntity>(id);
-
-        DbContext.Set<TEntity>().Remove(entity);
-
-        if (saveChanges)
-            await ExecuteAsync(entity.Id, () => DbContext.SaveChangesAsync(cancellationToken));
-
-        return entity;
-    }
-
-    /// <summary>
-    /// Executes the given data access function asynchronously.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <typeparam name="T">The return type of the data access function.</typeparam>
-    /// <param name="entityId">Id of entity</param>
-    /// <param name="dataAccessFunc">The data access function to execute.</param>
-    /// <returns>
-    /// The result of the data access function.
-    /// </returns>
-    /// <exception cref="Exception">Thrown if the execution of the data access function fails.</exception>
-    private static async ValueTask<T?> ExecuteAsync<T>(Guid entityId, Func<ValueTask<T?>> dataAccessFunc)
-    {
-        var result = await dataAccessFunc.GetValueAsync();
-        if (!result.IsSuccess)
-            throw MapEfCoreException(entityId, result.Exception!);
-
-        return result.Data;
+        return foundEntities;
     }
 
     /// <summary>

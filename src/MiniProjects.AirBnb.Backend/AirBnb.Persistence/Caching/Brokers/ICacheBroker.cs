@@ -13,9 +13,7 @@ public interface ICacheBroker
     /// <param name="key">The cache key of entry.</param>
     /// <param name="value">Cache entry to be stored.</param>
     /// <typeparam name="T">The type of the value to be stored.</typeparam>
-    /// <returns>
-    /// Task that contains the cache entry with given key if exists, otherwise null.
-    /// </returns>
+    /// <returns> Cache entry with given key if exists, otherwise null. </returns>
     ValueTask<bool> TryGetAsync<T>(string key, out T? value);
 
     /// <summary>
@@ -25,8 +23,5 @@ public interface ICacheBroker
     /// <param name="value">Cache entry to be stored.</param>
     /// <param name="entryOptions">The cache entry options.</param>
     /// <typeparam name="T">The type of the value to be stored.</typeparam>
-    /// <returns>
-    /// Task that sets cache entry.
-    /// </returns>
     ValueTask SetAsync<T>(string key, T value, CacheEntryOptions? entryOptions = default);
 }
