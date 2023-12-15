@@ -26,5 +26,5 @@ public class Location : Entity
     /// <summary>
     /// Gets or sets the ID of the parent.
     /// </summary>
-    public Guid ParentId { get; set; }
+    public Guid? ParentId { get; set; }
 }

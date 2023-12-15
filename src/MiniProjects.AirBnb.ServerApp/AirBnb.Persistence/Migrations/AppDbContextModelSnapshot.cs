@@ -29,7 +29,6 @@ namespace AirBnb.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
@@ -38,7 +37,7 @@ namespace AirBnb.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<Guid>("ParentId")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Type")
@@ -55,9 +54,7 @@ namespace AirBnb.Persistence.Migrations
                 {
                     b.HasOne("AirBnb.Domain.Entities.Location", null)
                         .WithMany()
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentId");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,10 +9,11 @@ public static partial class HostConfiguration
         return new(builder);
     }
 
-    public static ValueTask<WebApplication> ConfigureAsync(this WebApplication app)
+    public static async ValueTask<WebApplication> ConfigureAsync(this WebApplication app)
     {
+        await app.SeedDataAsync();
         app.UseExposers();
 
-        return new(app);
+        return app;
     }
 }

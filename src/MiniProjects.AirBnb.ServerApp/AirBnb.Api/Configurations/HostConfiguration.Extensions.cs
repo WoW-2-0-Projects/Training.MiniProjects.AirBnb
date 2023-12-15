@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AirBnb.Api.Data;
 using AirBnb.Application.Locations.Services;
 using AirBnb.Infrastructure.Common.Caching.Brokers;
 using AirBnb.Infrastructure.Common.Settings;
@@ -91,6 +92,20 @@ public static partial class HostConfiguration
         builder.Services.AddControllers();
 
         return builder;
+    }
+
+    /// <summary>
+    /// Configures the middleware to seed data
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
+    /// <returns>The <see cref="WebApplication"/> instance.</returns>
+    private static async Task<WebApplication> SeedDataAsync(this WebApplication app)
+    {
+        var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+        using var scope = scopeFactory.CreateScope();
+        await scope.ServiceProvider.SeedDataAsync();
+
+        return app;
     }
 
     /// <summary>

@@ -11,6 +11,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasOne<Location>().WithMany().HasForeignKey(location => location.ParentId);
 
         builder.Property(location => location.Name).IsRequired().HasMaxLength(256);
-        builder.Property(location => location.Code).IsRequired().HasMaxLength(64);
+        builder.Property(location => location.Code).IsRequired(false).HasMaxLength(64);
     }
 }
