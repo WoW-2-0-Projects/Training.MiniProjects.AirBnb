@@ -6,6 +6,14 @@
         <main-header/>
 
         <!-- Content -->
+        <article class="mt-[20px] bg-defaultBackground content-padding">
+
+
+
+        </article>
+
+        <!-- Content -->
+
         <!--    <locations-container/>-->
 
         <button class="mt-20" @click="appThemeService.toggleDarkMode()">Dark mode</button>
