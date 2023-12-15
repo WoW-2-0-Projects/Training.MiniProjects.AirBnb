@@ -1,6 +1,6 @@
 <template>
 
-    <div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center theme-bg-primary">
 
         <!-- Locations tab -->
         <locations-category-tab/>

@@ -8,15 +8,12 @@
         <!-- Content -->
         <article class="mt-[20px] bg-defaultBackground content-padding">
 
-
+            <!-- Locations container -->
+            <locations-container/>
 
         </article>
 
-        <!-- Content -->
-
-        <!--    <locations-container/>-->
-
-        <button class="mt-20" @click="appThemeService.toggleDarkMode()">Dark mode</button>
+        <button class="mt-80" @click="appThemeService.toggleDarkMode()">Dark mode</button>
 
     </div>
 
@@ -25,6 +22,7 @@
 <script setup lang="ts">
 import MainHeader from "@/common/components/MainHeader.vue";
 import { AppThemeService } from "@/infrastructure/service/AppThemeService";
+import LocationsContainer from "@/modules/locations/components/LocationsContainer.vue";
 
 // import LocationsContainer from "@/modules/locations/components/LocationsContainer.vue";
 

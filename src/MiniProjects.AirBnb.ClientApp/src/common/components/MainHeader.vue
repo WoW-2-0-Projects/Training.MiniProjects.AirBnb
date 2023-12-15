@@ -1,7 +1,7 @@
 <template>
 
     <header
-        class="w-full fixed h-20 top-0 z-10 flex justify-between items-center theme-bg-primary content-padding border-b border-borderSecondary text-textPrimary">
+        class="w-full fixed h-20 top-0 z-10 flex justify-between items-center theme-bg-primary content-padding border-b theme-border">
 
         <!-- Logo -->
         <main-logo/>
