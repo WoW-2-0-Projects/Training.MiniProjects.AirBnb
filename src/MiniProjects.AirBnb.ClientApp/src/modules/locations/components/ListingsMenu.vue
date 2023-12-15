@@ -3,7 +3,7 @@
     <div
         class=" flex flex-grow md:grow-0 md:w-fit items-center pl-6 pr-2 gap-4 theme-bg-secondary theme-border theme-shadow hover-shadow rounded-full">
 
-        <!-- Location menu detailed -->
+        <!-- Listing menu detailed -->
         <div class="h-12 hidden md:flex items-center justify-center gap-5 theme-text-primary">
 
             <button class="text-sm font-medium line-clamp-1">
@@ -36,7 +36,7 @@
             </button>
         </div>
 
-        <!-- Location menu simple -->
+        <!-- Listing menu simple -->
         <button class="md:hidden flex items-center justify-center gap-3 h-12">
 
                 <span class="h-[40px] w-[40px] flex items-center justify-center">

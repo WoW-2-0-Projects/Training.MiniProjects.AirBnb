@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import MainHeader from "@/common/components/MainHeader.vue";
 import { AppThemeService } from "@/infrastructure/service/AppThemeService";
-import LocationsContainer from "@/modules/locations/components/LocationsContainer.vue";
+import LocationsContainer from "@/modules/locations/components/ListingsContainer.vue";
 
-// import LocationsContainer from "@/modules/locations/components/LocationsContainer.vue";
+// import LocationsContainer from "@/modules/locations/components/ListingsContainer.vue";
 
 
 const appThemeService = new AppThemeService();

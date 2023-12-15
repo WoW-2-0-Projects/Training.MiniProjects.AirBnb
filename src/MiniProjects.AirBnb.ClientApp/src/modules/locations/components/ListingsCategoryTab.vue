@@ -5,8 +5,8 @@
         <!-- Previous button -->
         <previous-button class="mb-3 theme-bg-primary hover-shadow-zero"/>
 
-        <!--Locations category container -->
-        <locations-category-container/>
+        <!--Listings category container -->
+        <listing-category-container/>
 
         <!-- Next button -->
         <next-button class="mb-3 theme-bg-primary hover-shadow-zero"/>
@@ -15,7 +15,7 @@
         <div class="w-[500px] hidden lg:flex items-center justify-center pb-3">
 
             <!-- Locations filter -->
-            <locations-filter :isMobile="false"/>
+            <listings-filter :isMobile="false"/>
 
             <button class="ml-3 flex group h-12 w-auto px-4 theme-border justify-center items-center rounded-lg gap-3 theme-text-primary">
                 <span class="text-xs font-medium whitespace-nowrap">Display total before taxes</span>
@@ -28,6 +28,6 @@
 <script setup lang="ts">
 import PreviousButton from "@/common/components/PreviousButton.vue";
 import NextButton from "@/common/components/NextButton.vue";
-import LocationsCategoryContainer from "@/modules/locations/components/LocationsCategoryContainer.vue";
-import LocationsFilter from "@/modules/locations/components/LocationsFilter.vue";
+import ListingCategoryContainer from "@/modules/locations/components/ListingCategoryContainer.vue";
+import ListingsFilter from "@/modules/locations/components/ListingsFilter.vue";
 </script>

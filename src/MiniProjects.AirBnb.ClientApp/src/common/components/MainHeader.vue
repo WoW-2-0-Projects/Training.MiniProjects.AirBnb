@@ -25,10 +25,10 @@
 <script setup lang="ts">
 
 import MainLogo from "@/common/components/icons/MainLogo.vue";
-import LocationsMenu from "@/modules/locations/components/LocationsMenu.vue";
+import LocationsMenu from "@/modules/locations/components/ListingsMenu.vue";
 import { AppThemeService } from "@/infrastructure/service/AppThemeService";
 import ProfileMenu from "@/modules/identity/ProfileMenu.vue";
-import LocationsFilter from "@/modules/locations/components/LocationsFilter.vue";
+import LocationsFilter from "@/modules/locations/components/ListingsFilter.vue";
 
 
 </script>
