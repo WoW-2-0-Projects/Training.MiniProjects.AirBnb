@@ -9,7 +9,7 @@ namespace AirBnb.Domain.Common.Query;
 /// Represents a query specification for retrieving entities from a cache.
 /// </summary>
 /// <typeparam name="TSource">The type of source.</typeparam>
-public class QuerySpecification<TSource>(uint pageSize, uint pageToken, bool asNoTracking) : CacheModel
+public class QuerySpecification<TSource>(uint pageSize, uint pageToken, bool asNoTracking, int? filterHashCode = default) : ICacheModel
 {
     /// <summary>
     /// Gets filtering options collection for query.
@@ -29,17 +29,34 @@ public class QuerySpecification<TSource>(uint pageSize, uint pageToken, bool asN
     /// <summary>
     /// Gets pagination options for query.
     /// </summary>
-    public FilterPagination PaginationOptions { get; } = new(pageSize, pageToken);
+    public FilterPagination PaginationOptions { get; } = new()
+    {
+        PageSize = pageSize,
+        PageToken = pageToken
+    };
 
+    /// <summary>
+    /// Gets value indicating whether to use tracking in query
+    /// </summary>
     public bool AsNoTracking { get; } = asNoTracking;
+
+    /// <summary>
+    /// Gets the filter hash code that is used to filter items.
+    /// </summary>
+    public int? FilterHashCode { get; } = filterHashCode;
 
     public override int GetHashCode()
     {
+        if (FilterHashCode is not null) return FilterHashCode.Value;
+
         var hashCode = new HashCode();
         var expressionEqualityComparer = ExpressionEqualityComparer.Instance;
 
         foreach (var filteringExpression in FilteringOptions.Order(new PredicateExpressionComparer<TSource>()))
             hashCode.Add(expressionEqualityComparer.GetHashCode(filteringExpression));
+
+        foreach (var includeExpression in IncludingOptions.Order(new KeySelectorExpressionComparer<TSource>()))
+            hashCode.Add(expressionEqualityComparer.GetHashCode(includeExpression));
 
         foreach (var orderingExpression in OrderingOptions)
             hashCode.Add(expressionEqualityComparer.GetHashCode(orderingExpression.KeySelector));
@@ -54,5 +71,5 @@ public class QuerySpecification<TSource>(uint pageSize, uint pageToken, bool asN
         return obj is QuerySpecification<TSource> querySpecification && querySpecification.GetHashCode() == GetHashCode();
     }
 
-    public override string CacheKey => $"{typeof(TSource).Name}_{GetHashCode()}";
+    public string CacheKey => $"{typeof(TSource).Name}_{GetHashCode()}";
 }

@@ -1,12 +1,12 @@
 ﻿namespace AirBnb.Domain.Common.Caching;
 
 /// <summary>
-/// Represents a base class for implementing cache models.
+/// Defines cache model properties
 /// </summary>
-public abstract class CacheModel
+public interface ICacheModel
 {
     /// <summary>
     /// Gets computed cache key.
     /// </summary>
-    public abstract string CacheKey { get; }
+    string CacheKey { get; }
 }
