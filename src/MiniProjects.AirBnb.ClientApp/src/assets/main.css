@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 @layer components {
-    .theme-bg {
-        @apply bg-bgColor dark:bg-bgColorDark;
+
+    .theme-bg-primary {
+        @apply bg-bgColorPrimary dark:bg-bgColorPrimaryDark;
     }
 
     .theme-bg-secondary {
@@ -12,17 +13,41 @@
     }
 
     .theme-border {
-        @apply border-borderColor dark:border-borderColorDark;
+        @apply border border-borderColor dark:border-borderColorDark;
     }
 
+    .theme-shadow {
+        @apply shadow-shadowColor;
+    }
+
+    .theme-text-primary {
+        @apply text-textPrimary dark:text-textPrimaryDark;
+    }
+
+    .theme-text-secondary {
+        @apply text-textSecondary dark:text-textSecondaryDark;
+    }
+
+    .theme-icon-primary {
+        @apply stroke-textPrimary dark:stroke-textPrimaryDark;
+        @apply fill-textPrimary dark:fill-textPrimaryDark;
+    }
+
+    .theme-icon-secondary {
+        @apply stroke-textSecondary dark:stroke-textSecondaryDark;
+        @apply fill-textSecondary dark:fill-textSecondaryDark;
+    }
+
+    /*.theme-icon {*/
+    /*    @apply text-textPrimary dark dark:text-iconPrimaryDark;*/
+    /*}*/
     .hover-shadow {
-        @apply shadow-md hover:shadow-lg;
+        @apply shadow-md hover:shadow-lg ;
     }
 
-
-
-
-
+    .hover-shadow-zero {
+        @apply shadow-none hover:shadow-md ;
+    }
 
     .select-transition {
         @apply transition duration-200;

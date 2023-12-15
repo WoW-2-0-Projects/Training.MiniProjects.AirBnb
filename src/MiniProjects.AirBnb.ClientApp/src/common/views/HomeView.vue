@@ -1,14 +1,26 @@
 <template>
 
-    <!-- Header-->
-    <main-header/>
+    <div class="theme-bg-primary h-screen">
 
-    <!-- Content -->
-    <locations-container/>
+        <!-- Header-->
+        <main-header/>
+
+        <!-- Content -->
+        <!--    <locations-container/>-->
+
+        <button class="mt-20" @click="appThemeService.toggleDarkMode()">Dark mode</button>
+
+    </div>
 
 </template>
 
 <script setup lang="ts">
 import MainHeader from "@/common/components/MainHeader.vue";
-import LocationsContainer from "@/modules/locations/components/LocationsContainer.vue";
+import { AppThemeService } from "@/infrastructure/service/AppThemeService";
+
+// import LocationsContainer from "@/modules/locations/components/LocationsContainer.vue";
+
+
+const appThemeService = new AppThemeService();
+
 </script>

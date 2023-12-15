@@ -1,7 +1,7 @@
 <template>
 
     <div
-        class="theme-bg fixed h-20 top-0 z-10 content-padding w-full flex justify-between items-center border-b border-borderSecondary text-textPrimary">
+        class="theme-bg-primary fixed h-20 top-0 z-10 content-padding w-full flex justify-between items-center border-b border-borderSecondary text-textPrimary">
 
         <!-- Logo -->
         <main-logo/>
