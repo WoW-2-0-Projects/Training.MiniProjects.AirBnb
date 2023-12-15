@@ -1,5 +1,7 @@
 <template>
 
+    <home-view/>
+
 </template>
 
 <script lang="ts" setup>

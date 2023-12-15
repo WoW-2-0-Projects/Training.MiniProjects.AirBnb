@@ -3,6 +3,27 @@
 @tailwind utilities;
 
 @layer components {
+    .theme-bg {
+        @apply bg-bgColor dark:bg-bgColorDark;
+    }
+
+    .theme-bg-secondary {
+        @apply bg-bgColorSecondary dark:bg-bgColorSecondaryDark;
+    }
+
+    .theme-border {
+        @apply border-borderColor dark:border-borderColorDark;
+    }
+
+    .hover-shadow {
+        @apply shadow-md hover:shadow-lg;
+    }
+
+
+
+
+
+
     .select-transition {
         @apply transition duration-200;
     }
@@ -10,6 +31,7 @@
     .select-common {
         @apply cursor-pointer;
     }
+
 
     .select-logo {
         @apply bg-logoSecondary hover:bg-logoSelected focus:bg-logoSelected active:bg-logoSelected group-hover:bg-logoSelected group-focus:bg-logoSelected group-active:bg-logoSelected;

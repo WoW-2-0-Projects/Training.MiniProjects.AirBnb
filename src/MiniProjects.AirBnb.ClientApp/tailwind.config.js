@@ -3,6 +3,7 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     screens: {
       sm: '545px',
@@ -12,6 +13,12 @@ export default {
     },
     extend: {
       colors: {
+        bgColor: '#f7f7f7',
+        bgColorSecondary: '#ffffff',
+        bgColorDark: '#21252b',
+        bgColorSecondaryDark: '#2c313c',
+        borderColor: '#eaeaea',
+        borderColorDark: '#333841',
         textPrimary: '#222222',
         textSecondary: '#818181',
         logoSelected: '#000000',
@@ -19,7 +26,7 @@ export default {
         logoAccent: '#dddddd',
         logoPrimary: '#ff385c',
         borderSecondary: '#cccccc',
-        defaultBackground: '#ffffff'
+        defaultBackground: '#ffffff',
       }
     },
   },
