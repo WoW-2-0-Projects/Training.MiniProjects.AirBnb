@@ -1,6 +1,7 @@
 <template>
 
-    <button class="h-10 w-10 ml-3 flex md:hidden justify-center items-center theme-border rounded-full" :class="{'hidden': !isMobile}">
+    <button class="h-10 w-10 ml-3 flex md:hidden justify-center items-center theme-border rounded-full theme-shadow hover-shadow-zero primary-transition"
+            :class="{'hidden': !isMobile}">
         <svg class="h-4 w-4 theme-icon-primary stroke-[2px]"
              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
              aria-hidden="true"

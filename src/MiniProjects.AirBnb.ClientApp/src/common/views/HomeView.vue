@@ -1,6 +1,6 @@
 <template>
 
-    <div class="theme-bg-primary h-screen">
+    <div class="theme-bg-primary h-full">
 
         <!-- Header-->
         <main-header/>

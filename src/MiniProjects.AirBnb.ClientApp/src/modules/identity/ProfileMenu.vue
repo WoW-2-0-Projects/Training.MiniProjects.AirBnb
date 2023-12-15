@@ -1,6 +1,6 @@
 <template>
 
-    <div class="hidden md:flex justify-center items-center gap-5 theme-bg">
+    <div class="hidden md:flex justify-center items-center gap-5 theme-bg main-transition">
 
         <!-- Air Bnb your home button -->
         <button class="text-sm font-medium theme-text-primary">

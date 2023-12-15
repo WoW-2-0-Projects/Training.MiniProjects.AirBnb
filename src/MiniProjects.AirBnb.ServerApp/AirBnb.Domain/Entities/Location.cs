@@ -27,4 +27,6 @@ public class Location : Entity
     /// Gets or sets the ID of the parent.
     /// </summary>
     public Guid? ParentId { get; set; }
+    
+    public IList<Location> Cities { get; set; }
 }

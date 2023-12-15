@@ -15,9 +15,14 @@ public class CountryFilter : FilterPagination, IQueryConvertible<Location>
     /// </summary>
     public string? SearchKeyword { get; init; }
 
+    public bool IncludeCities { get; set; }
+
     public QuerySpecification<Location> ToQuerySpecification()
     {
         var querySpecification = new QuerySpecification<Location>(PageSize, PageToken, true, GetHashCode());
+
+        if (IncludeCities)
+            querySpecification.IncludingOptions.Add(location => location.Cities);
 
         querySpecification.FilteringOptions.Add(location => location.Type == LocationType.Country);
 

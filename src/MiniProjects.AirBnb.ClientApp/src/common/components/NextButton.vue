@@ -1,7 +1,7 @@
 <template>
 
-    <div>
-        <button class="h-8 w-8 flex items-center justify-center rounded-full theme-border">
+    <div class="rounded-full theme-border primary-transition">
+        <button class="h-8 w-8 flex items-center justify-center">
             <svg class="h-3 w-3 theme-icon-primary stroke-[5px]"
                  xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 32 32"

@@ -1,7 +1,7 @@
 <template>
 
     <div
-        class=" flex flex-grow md:grow-0 md:w-fit items-center pl-6 pr-2 gap-4 theme-bg-secondary theme-border theme-shadow hover-shadow rounded-full">
+        class=" flex flex-grow md:grow-0 md:w-fit items-center pl-6 pr-2 gap-4 theme-bg-secondary theme-border theme-shadow hover-shadow rounded-full primary-transition">
 
         <!-- Listing menu detailed -->
         <div class="h-12 hidden md:flex items-center justify-center gap-5 theme-text-primary">

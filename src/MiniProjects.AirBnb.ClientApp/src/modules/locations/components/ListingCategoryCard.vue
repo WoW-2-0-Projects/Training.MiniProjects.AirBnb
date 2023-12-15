@@ -1,9 +1,9 @@
 <template>
 
-    <div class="h-[80px] min-w-[50px] flex flex-col justify-center items-center cursor-pointer group">
+    <div class="h-[80px] min-w-[50px] flex flex-col justify-center items-center cursor-pointer group main-transition">
 
         <!-- Category image -->
-        <img class="h-[24px] w-[24px] mb-2 opacity-40 select-opacity primary-transition"
+        <img class="h-[24px] w-[24px] mb-2 opacity-40 select-opacity primary-transition dark:invert"
              src="https://a0.muscache.com/pictures/1b6a8b70-a3b6-48b5-88e1-2243d9172c06.jpg"
              alt="Listing category icon">
 

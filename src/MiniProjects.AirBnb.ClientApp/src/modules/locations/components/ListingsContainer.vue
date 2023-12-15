@@ -5,9 +5,13 @@
         <!-- Locations tab -->
         <listings-category-tab/>
 
+        <!-- Listings grid -->
+        <listings-grid/>
+
     </div>
 
 </template>
 <script setup lang="ts">
 import ListingsCategoryTab from "@/modules/locations/components/ListingsCategoryTab.vue";
+import ListingsGrid from "@/modules/locations/components/ListingsGrid.vue";
 </script>
