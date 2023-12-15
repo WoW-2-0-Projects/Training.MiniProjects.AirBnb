@@ -6,6 +6,7 @@ using AirBnb.Infrastructure.Common.Settings;
 using AirBnb.Infrastructure.Locations.Services;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.DataContexts;
+using AirBnb.Persistence.Repositories;
 using AirBnb.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

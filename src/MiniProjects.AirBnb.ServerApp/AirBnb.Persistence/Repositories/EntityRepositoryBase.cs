@@ -5,6 +5,7 @@ using AirBnb.Domain.Exceptions;
 using AirBnb.Domain.Extensions;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
+using AirBnb.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 

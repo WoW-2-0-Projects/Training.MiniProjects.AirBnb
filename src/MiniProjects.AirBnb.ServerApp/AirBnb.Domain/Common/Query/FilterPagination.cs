@@ -3,17 +3,17 @@
 /// <summary>
 /// Represents a class for filter pagination.
 /// </summary>
-public class FilterPagination(uint pageSize, uint pageToken)
+public class FilterPagination
 {
     /// <summary>
     /// Gets the size of the page ( limit of items in query result )
     /// </summary>
-    public uint PageSize { get; } = pageSize;
+    public uint PageSize { get; init; }
 
     /// <summary>
     /// Gets the page token ( identifier ) of query
     /// </summary>
-    public uint PageToken { get; } = pageToken;
+    public uint PageToken { get; init; }
 
     public override int GetHashCode()
     {
