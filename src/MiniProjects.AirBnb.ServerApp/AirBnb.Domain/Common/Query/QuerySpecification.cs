@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using AirBnb.Domain.Common.Caching;
-using AirBnb.Domain.Common.Entities;
 using AirBnb.Domain.Comparers;
 using Microsoft.EntityFrameworkCore.Query;
 
@@ -9,18 +8,23 @@ namespace AirBnb.Domain.Common.Query;
 /// <summary>
 /// Represents a query specification for retrieving entities from a cache.
 /// </summary>
-/// <typeparam name="TEntity">The type of entity.</typeparam>
-public class QuerySpecification<TEntity>(uint pageSize, uint pageToken, bool asNoTracking) : CacheModel where TEntity : IEntity
+/// <typeparam name="TSource">The type of source.</typeparam>
+public class QuerySpecification<TSource>(uint pageSize, uint pageToken, bool asNoTracking) : CacheModel
 {
     /// <summary>
     /// Gets filtering options collection for query.
     /// </summary>
-    public List<Expression<Func<TEntity, bool>>> FilteringOptions { get; } = [];
+    public List<Expression<Func<TSource, bool>>> FilteringOptions { get; } = [];
 
     /// <summary>
     /// Gets ordering options collection for query.
     /// </summary>
-    public List<(Expression<Func<TEntity, object>> KeySelector, bool IsAscending)> OrderingOptions { get; } = [];
+    public List<(Expression<Func<TSource, object>> KeySelector, bool IsAscending)> OrderingOptions { get; } = [];
+
+    /// <summary>
+    /// Gets including options collection for query.
+    /// </summary>
+    public List<Expression<Func<TSource, object>>> IncludingOptions { get; } = [];
 
     /// <summary>
     /// Gets pagination options for query.
@@ -34,7 +38,7 @@ public class QuerySpecification<TEntity>(uint pageSize, uint pageToken, bool asN
         var hashCode = new HashCode();
         var expressionEqualityComparer = ExpressionEqualityComparer.Instance;
 
-        foreach (var filteringExpression in FilteringOptions.Order(new PredicateExpressionComparer<TEntity>()))
+        foreach (var filteringExpression in FilteringOptions.Order(new PredicateExpressionComparer<TSource>()))
             hashCode.Add(expressionEqualityComparer.GetHashCode(filteringExpression));
 
         foreach (var orderingExpression in OrderingOptions)
@@ -47,8 +51,8 @@ public class QuerySpecification<TEntity>(uint pageSize, uint pageToken, bool asN
 
     public override bool Equals(object? obj)
     {
-        return obj is QuerySpecification<TEntity> querySpecification && querySpecification.GetHashCode() == GetHashCode();
+        return obj is QuerySpecification<TSource> querySpecification && querySpecification.GetHashCode() == GetHashCode();
     }
 
-    public override string CacheKey => $"{typeof(TEntity).Name}_{GetHashCode()}";
+    public override string CacheKey => $"{typeof(TSource).Name}_{GetHashCode()}";
 }

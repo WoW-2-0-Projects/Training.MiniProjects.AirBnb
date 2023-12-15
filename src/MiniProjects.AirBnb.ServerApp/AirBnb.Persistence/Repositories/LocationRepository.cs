@@ -3,8 +3,9 @@ using AirBnb.Domain.Entities;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
 using AirBnb.Persistence.DataContexts;
+using AirBnb.Persistence.Repositories.Interfaces;
 
-namespace AirBnb.Persistence.Repositories.Interfaces;
+namespace AirBnb.Persistence.Repositories;
 
 /// <summary>
 /// Represents a repository for managing locations in the application.

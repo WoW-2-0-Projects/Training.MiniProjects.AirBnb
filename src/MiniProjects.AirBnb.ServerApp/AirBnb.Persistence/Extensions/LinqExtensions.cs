@@ -1,7 +1,8 @@
 using AirBnb.Domain.Common.Entities;
 using AirBnb.Domain.Common.Query;
+using Microsoft.EntityFrameworkCore;
 
-namespace AirBnb.Domain.Extensions;
+namespace AirBnb.Persistence.Extensions;
 
 /// <summary>
 /// Extension methods for LINQ operations.
@@ -16,9 +17,13 @@ public static class LinqExtensions
     /// <param name="querySpecification">The query specification to apply.</param>
     /// <returns>Same queryable resource with specifications applied</returns>
     public static IQueryable<TSource> ApplySpecification<TSource>(this IQueryable<TSource> source, QuerySpecification<TSource> querySpecification)
-        where TSource : IEntity
+        where TSource : class, IEntity
     {
-        source = source.ApplyPredicates(querySpecification).ApplyOrdering(querySpecification).ApplyPagination(querySpecification);
+        source = source
+            .ApplyPredicates(querySpecification)
+            .ApplyOrdering(querySpecification)
+            .ApplyIncluding(querySpecification)
+            .ApplyPagination(querySpecification);
 
         return source;
     }
@@ -64,6 +69,21 @@ public static class LinqExtensions
         where TSource : IEntity
     {
         querySpecification.FilteringOptions.ForEach(predicate => source = source.Where(predicate.Compile()));
+
+        return source;
+    }
+
+    /// <summary>
+    /// Applies the joining to queryable source
+    /// </summary>
+    /// <typeparam name="TSource">The type of elements in the queryable source.</typeparam>
+    /// <param name="source">Queryable source to apply specifications to.</param>
+    /// <param name="querySpecification">The query specification to apply.</param>
+    /// <returns>Same queryable resource with predicates applied</returns>
+    public static IQueryable<TSource> ApplyIncluding<TSource>(this IQueryable<TSource> source, QuerySpecification<TSource> querySpecification)
+        where TSource : class, IEntity
+    {
+        querySpecification.FilteringOptions.ForEach(includeOption => source = source.Include(includeOption));
 
         return source;
     }
