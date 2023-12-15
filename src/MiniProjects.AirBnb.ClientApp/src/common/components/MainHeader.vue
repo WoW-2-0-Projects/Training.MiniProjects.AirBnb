@@ -13,7 +13,7 @@
         <profile-menu/>
 
         <!-- Locations filter -->
-        <locations-filter/>
+        <locations-filter :isMobile="true"/>
 
         <!-- Bottom border -->
         <div class="absolute border-b-2 border-borderSecondary"></div>
