@@ -8,7 +8,7 @@ using AirBnb.Persistence.Repositories.Interfaces;
 namespace AirBnb.Persistence.Repositories;
 
 /// <summary>
-/// Represents a repository for managing locations in the application.
+/// Represents a repository for managing locations.
 /// </summary>
 public class LocationRepository(AppDbContext dbContext, ICacheBroker cacheBroker) : EntityRepositoryBase<Location, AppDbContext>(
     dbContext,

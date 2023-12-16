@@ -22,6 +22,15 @@ public static class SeedDataExtensions
 
         if (!await dbContext.Locations.AnyAsync())
             await SeedLocationsAsync(dbContext, webHostEnvironment);
+
+        // if (!await dbContext.StorageFiles.AnyAsync())
+        //     await SeedStorageFilesAsync(dbContext, webHostEnvironment);
+
+        if (!await dbContext.ListingCategories.AnyAsync())
+            await SeedListingCategoriesAsync(dbContext, webHostEnvironment);
+
+        if (dbContext.ChangeTracker.HasChanges())
+            await dbContext.SaveChangesAsync();
     }
 
     /// <summary>
@@ -45,6 +54,34 @@ public static class SeedDataExtensions
         // Add countries and cities
         await dbContext.Locations.AddRangeAsync(countries);
         await dbContext.Locations.AddRangeAsync(cities);
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Seeds the database with locations.
+    /// </summary>
+    /// <param name="dbContext">Database context to seed data</param>
+    /// <param name="webHostEnvironment">Web application environment</param>
+    private static async ValueTask SeedListingCategoriesAsync(AppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+    {
+        var listingCategoriesFileName = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "SeedData", "ListingCategories.json");
+
+        // Retrieve listing categories
+        var listingCategories = JsonConvert.DeserializeObject<List<ListingCategory>>(await File.ReadAllTextAsync(listingCategoriesFileName))!;
+
+        // Set image storage
+        listingCategories.ForEach(
+            listingCategory => listingCategory.ImageStorageFile = new StorageFile
+            {
+                Id = Guid.NewGuid(),
+                FileName = $"{listingCategory.ImageStorageFileId}.jpg",
+                Type = StorageFileType.Image
+            }
+        );
+
+        // Add listing categories
+        await dbContext.ListingCategories.AddRangeAsync(listingCategories);
 
         await dbContext.SaveChangesAsync();
     }
