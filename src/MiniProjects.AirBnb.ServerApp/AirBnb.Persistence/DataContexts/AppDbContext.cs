@@ -8,6 +8,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Location> Locations => Set<Location>();
     
     public DbSet<StorageFile> StorageFiles => Set<StorageFile>();
+    
+    public DbSet<ListingCategory> ListingCategories => Set<ListingCategory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
