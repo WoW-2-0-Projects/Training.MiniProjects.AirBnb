@@ -3,13 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AirBnb.Persistence.DataContexts;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Location> Locations => Set<Location>();
-
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
+    
+    public DbSet<StorageFile> StorageFiles => Set<StorageFile>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
