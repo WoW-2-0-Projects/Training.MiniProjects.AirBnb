@@ -2,14 +2,11 @@
 
     <div class="fixed w-full top-0 pt-2 mt-20 z-10 flex items-center justify-center gap-4 content-padding theme-bg-primary">
 
-        <!-- Previous button -->
-        <previous-button class="mb-3 theme-bg-primary hover-shadow-zero"/>
-
-        <!--Listings category container -->
-        <listing-category-container :listingCategories="listingCategories as ListingCategory[]"/>
-
-        <!-- Next button -->
-        <next-button class="mb-3 theme-bg-primary hover-shadow-zero"/>
+        <horizontal-scroll :changeSource="listingCategories">
+            <listing-category-card v-for="listingCategory in listingCategories"
+                                   :listingCategory="listingCategory as ListingCategory"
+                                   :index="listingCategory.id"/>
+        </horizontal-scroll>
 
         <!-- Filters actions -->
         <div class="w-[500px] hidden lg:flex items-center justify-center pb-3">
@@ -26,13 +23,12 @@
 
 </template>
 <script setup lang="ts">
-import PreviousButton from "@/common/components/PreviousButton.vue";
-import NextButton from "@/common/components/NextButton.vue";
-import ListingCategoryContainer from "@/modules/locations/components/ListingCategoryContainer.vue";
 import ListingsFilter from "@/modules/locations/components/ListingsFilter.vue";
 import { ListingCategory } from "@/modules/locations/models/ListingCategory";
 import { onBeforeMount, ref } from "vue";
 import { AirBnbApiClient } from "@/infrastructure/apiClients/airBnbApiClient/brokers/AirBnbApiClient";
+import ListingCategoryCard from "@/modules/locations/components/ListingCategoryCard.vue";
+import HorizontalScroll from "@/common/components/HorizontalScroll.vue";
 
 const airBnbApiClient = new AirBnbApiClient();
 
@@ -48,6 +44,7 @@ onBeforeMount(async () => {
 const loadListingCategories = async () => {
     const response = await airBnbApiClient.listingCategories.getAsync()
     if (response.response) {
+        console.log('loaded')
         listingCategories.value = response.response;
     }
 };

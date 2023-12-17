@@ -1,6 +1,6 @@
 <template>
 
-    <div class="h-[80px] min-w-[50px] flex flex-col justify-center items-center cursor-pointer group main-transition">
+    <div class="h-[80px] min-w-[50px] flex flex-col justify-center items-center cursor-pointer group main-transition select-none">
 
         <!-- Category image -->
         <img class="h-[24px] w-[24px] mb-2 opacity-40 select-opacity primary-transition dark:invert"
@@ -20,12 +20,17 @@
 <script setup lang="ts">
 
 import type { ListingCategory } from "@/modules/locations/models/ListingCategory";
+import { onMounted } from "vue";
 
 const props = defineProps({
     listingCategory: {
         type: Object as () => ListingCategory,
         required: true
     }
+});
+
+onMounted(() => {
+    console.log('mounted')
 });
 
 </script>
