@@ -1,7 +1,7 @@
 import type ApiClientBase from "@/infrastructure/apiClients/apiClientBase/ApiClientBase";
 import { ListingCategory } from "@/modules/locations/models/ListingCategory";
 
-export class ListingCategoriesEndpointsClients {
+export class ListingsCategoryEndpointClient {
     private client: ApiClientBase;
 
     constructor(client: ApiClientBase) {

@@ -63,6 +63,10 @@
         @apply hover:opacity-80 focus:opacity-100 active:opacity-100 group-hover:opacity-80 group-focus:opacity-100 group-active:opacity-100;
     }
 
+    .selected-opacity {
+        @apply opacity-100;
+    }
+
     .content-padding {
         @apply px-6 md:px-10 xl:px-20
     }

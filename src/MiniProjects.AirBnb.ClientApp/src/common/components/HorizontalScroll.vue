@@ -1,13 +1,10 @@
-<template>
+<template class="relative">
 
     <!-- Previous button -->
-    <previous-button v-if="canScrollPrev" class="mb-3 theme-bg-primary hover-shadow-zero" @click="onPrevCategories"/>
+    <previous-button v-if="canScrollPrev" class="mb-3 theme-bg-primary hover-shadow-zero top-" @click="onPrevCategories"/>
 
     <div ref="scrollContainer" class="flex gap-6 md:gap-12 overflow-x-scroll no-scrollbar">
-        <slot/>
-
-<!--        <listing-category-card v-for="listingCategory in listingCategories" :listingCategory="listingCategory" :index="listingCategory.id"/>-->
-
+        <slot v-bind="$attrs"></slot>
     </div>
 
     <!-- Next button -->
@@ -15,17 +12,24 @@
 
 </template>
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, type PropType, ref, watch } from "vue";
+import { nextTick, onMounted, onUnmounted, type PropType, ref, watch } from "vue";
 import PreviousButton from "@/common/components/PreviousButton.vue";
 import NextButton from "@/common/components/NextButton.vue";
+import { DocumentService } from "@/infrastructure/service/DcoumentService";
+import ListingCard from "@/modules/locations/components/ListingCard.vue";
 
 const scrollContainer = ref<HTMLDivElement>();
-const scrollDistance = 450
+const documentService = new DocumentService();
 
 const props = defineProps({
-    changeSource: {
+    scrollChangeSource: {
         type: Array as PropType<Array<any>>,
         required: true
+    },
+    scrollDistance: {
+        type: Number as PropType<number>,
+        required: false,
+        default: 450
     }
 });
 
@@ -34,59 +38,62 @@ const props = defineProps({
 const scrollPosition = ref<number>(0);
 const canScrollPrev = ref<boolean>(true);
 const canScrollNext = ref<boolean>(true);
+const isMounted = ref<boolean>(false);
+const firstComputed = ref<boolean>(false);
 
-watch(() => [props.changeSource, scrollPosition.value], () => {
+watch(() => [props.scrollChangeSource], () => {
+    if (firstComputed.value) return;
 
     nextTick(() => {
-    //     console.log('next tick');
-
-        if (scrollContainer.value) {
-            canScrollPrev.value = scrollContainer.value.scrollLeft > 0
-            canScrollNext.value = scrollContainer.value.scrollLeft + scrollContainer.value.clientWidth < scrollContainer.value.scrollWidth;
-        }
+        computeCanScroll();
+        firstComputed.value = true;
     });
 });
 
+const computeCanScroll = () => {
+    canScrollPrev.value = documentService.canScrollLeft(scrollContainer.value!);
+    canScrollNext.value = documentService.canScrollRight(scrollContainer.value!);
+};
+
 onMounted(() => {
-    if (scrollContainer.value) {
-        scrollContainer.value.addEventListener('scroll', (event: Event) => {
-            const target = event.target as HTMLDivElement;
-            scrollPosition.value = target.scrollLeft;
-        })
-    }
-})
+    if (!scrollContainer.value) return;
+
+    documentService.addEventListener(scrollContainer.value, 'scroll', onScroll);
+
+    isMounted.value = true;
+});
 
 onUnmounted(() => {
-    if (scrollContainer.value) {
-        scrollContainer.value.removeEventListener('scroll', (event) => {
-            const target = event.target as HTMLDivElement;
-            scrollPosition.value = target.scrollLeft;
-        })
-    }
-})
+    if (!scrollContainer.value) return;
+
+    documentService.removeEventListener(scrollContainer.value, 'scroll', onScroll);
+});
 
 /* endregion */
 
 /* region Methods */
 
 const onPrevCategories = () => {
-    if (scrollContainer.value) {
-        scrollContainer.value.scroll({
-            left: scrollContainer.value.scrollLeft - scrollDistance,
-            behavior: "smooth"
-        });
-    }
-}
+    if (!scrollContainer.value) return;
+
+    documentService.scrollLeft(scrollContainer.value, props.scrollDistance);
+};
 
 const onNextCategories = () => {
-    if (scrollContainer.value) {
-        // scroll to right
-        scrollContainer.value.scroll({
-            left: scrollContainer.value?.scrollLeft + scrollDistance,
-            behavior: "smooth"
-        });
-    }
-}
+    if (!scrollContainer.value) return;
+
+    documentService.scrollRight(scrollContainer.value, props.scrollDistance);
+    // computeCanScroll();
+};
+
+/* endregion */
+
+/* region Event listeners */
+
+const onScroll = (target: HTMLElement) => {
+    scrollPosition.value = target.scrollLeft;
+    computeCanScroll();
+};
 
 /* endregion */
 

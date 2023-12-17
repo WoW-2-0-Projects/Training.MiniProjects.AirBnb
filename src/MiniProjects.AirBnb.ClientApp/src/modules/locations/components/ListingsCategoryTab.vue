@@ -6,6 +6,7 @@
             <listing-category-card v-for="listingCategory in listingCategories"
                                    v-bind="$attrs"
                                    :listingCategory="listingCategory as ListingCategory"
+                                   :selectedCategoryId="selectedCategoryId"
                                    :index="listingCategory.id"
                                    @onCategorySelected="onCategorySelected"/>
         </horizontal-scroll>
@@ -24,31 +25,40 @@
     </div>
 
 </template>
+
+
 <script setup lang="ts">
+import { defineEmits, defineProps } from "vue";
 import ListingsFilter from "@/modules/locations/components/ListingsFilter.vue";
 import { ListingCategory } from "@/modules/locations/models/ListingCategory";
-import { onBeforeMount, ref } from "vue";
-import { AirBnbApiClient } from "@/infrastructure/apiClients/airBnbApiClient/brokers/AirBnbApiClient";
 import ListingCategoryCard from "@/modules/locations/components/ListingCategoryCard.vue";
 import HorizontalScroll from "@/common/components/HorizontalScroll.vue";
 
-const airBnbApiClient = new AirBnbApiClient();
-
-const listingCategories = ref<Array<ListingCategory>>([]);
-
-onBeforeMount(async () => {
-    await loadListingCategories();
+const props = defineProps({
+    listingCategories: {
+        type:  Array<ListingCategory>,
+        required: true
+    },
+    selectedCategoryId: {
+        type: String,
+        required: true
+    }
 });
 
-/*
-    Loads listing categories
- */
-const loadListingCategories = async () => {
-    const response = await airBnbApiClient.listingCategories.getAsync()
-    if (response.response) {
-        console.log('loaded')
-        listingCategories.value = response.response;
-    }
-};
+/* region Emits and Props */
+
+const emit = defineEmits({
+    onCategorySelected: (categoryId: string) => true
+});
+
+/* endregion */
+
+/* region Event handlers */
+
+const onCategorySelected = async (categoryId: string) => {
+    emit('onCategorySelected', categoryId);
+}
+
+/* endregion */
 
 </script>

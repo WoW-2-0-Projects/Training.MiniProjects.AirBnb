@@ -28,8 +28,6 @@ export class AppThemeService {
      * Sets the application theme based on the user's preference.
      */
     public setAppTheme(): void {
-        console.log('is dark mode', this.isDarkMode());
-
         if (this.isDarkMode()) {
             document.body.classList.add("dark");
         } else {

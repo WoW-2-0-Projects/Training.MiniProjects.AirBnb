@@ -1,7 +1,5 @@
-import type { Guid } from "guid-typescript";
-
 export class ListingCategory {
-    public id!: Guid;
+    public id!: string;
     public name!: string;
     public imageUrl!: string;
 }
