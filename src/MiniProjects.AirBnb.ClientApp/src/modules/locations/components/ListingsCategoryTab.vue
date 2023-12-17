@@ -6,7 +6,7 @@
         <previous-button class="mb-3 theme-bg-primary hover-shadow-zero"/>
 
         <!--Listings category container -->
-        <listing-category-container/>
+        <listing-category-container :listingCategories="listingCategories as ListingCategory[]"/>
 
         <!-- Next button -->
         <next-button class="mb-3 theme-bg-primary hover-shadow-zero"/>
@@ -30,4 +30,26 @@ import PreviousButton from "@/common/components/PreviousButton.vue";
 import NextButton from "@/common/components/NextButton.vue";
 import ListingCategoryContainer from "@/modules/locations/components/ListingCategoryContainer.vue";
 import ListingsFilter from "@/modules/locations/components/ListingsFilter.vue";
+import { ListingCategory } from "@/modules/locations/models/ListingCategory";
+import { onBeforeMount, ref } from "vue";
+import { AirBnbApiClient } from "@/infrastructure/apiClients/airBnbApiClient/brokers/AirBnbApiClient";
+
+const airBnbApiClient = new AirBnbApiClient();
+
+const listingCategories = ref<Array<ListingCategory>>([]);
+
+onBeforeMount(async () => {
+    await loadListingCategories();
+});
+
+/*
+    Loads listing categories
+ */
+const loadListingCategories = async () => {
+    const response = await airBnbApiClient.listingCategories.getAsync()
+    if (response.response) {
+        listingCategories.value = response.response;
+    }
+};
+
 </script>
