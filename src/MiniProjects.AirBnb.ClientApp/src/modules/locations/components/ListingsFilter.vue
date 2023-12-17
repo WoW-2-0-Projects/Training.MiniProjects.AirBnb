@@ -34,6 +34,4 @@ const props = defineProps({
     disabled: false,
 });
 
-console.log('is mobile', props.isMobile);
-
 </script>
