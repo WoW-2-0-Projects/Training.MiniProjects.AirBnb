@@ -1,4 +1,4 @@
-﻿using AirBnb.Infrastructure.Common.Settings;
+﻿using AirBnb.Infrastructure.Common.Caching.Settings;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
 using Force.DeepCloner;

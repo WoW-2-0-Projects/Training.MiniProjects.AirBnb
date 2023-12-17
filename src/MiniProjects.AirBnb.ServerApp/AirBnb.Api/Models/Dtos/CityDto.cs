@@ -1,7 +1,7 @@
 ﻿namespace AirBnb.Api.Models.Dtos;
 
 /// <summary>
-/// Represents a city in the application.
+/// Represents city data transfer object
 /// </summary>
 public class CityDto
 {

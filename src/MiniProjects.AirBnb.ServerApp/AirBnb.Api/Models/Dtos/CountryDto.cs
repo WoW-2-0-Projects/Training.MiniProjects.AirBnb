@@ -1,7 +1,7 @@
 ﻿namespace AirBnb.Api.Models.Dtos;
 
 /// <summary>
-/// Represents a country in the application.
+/// Represents country data transfer object
 /// </summary>
 public class CountryDto
 {
