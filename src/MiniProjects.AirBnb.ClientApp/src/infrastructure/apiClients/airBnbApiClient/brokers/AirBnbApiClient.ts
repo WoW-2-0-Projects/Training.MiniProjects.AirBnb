@@ -1,5 +1,6 @@
-import { ListingCategoriesEndpointsClients } from "@/infrastructure/apiClients/airBnbApiClient/brokers/ListingCategoriesEndpointsClients";
+import { ListingsCategoryEndpointClient } from "@/infrastructure/apiClients/airBnbApiClient/brokers/ListingsCategoryEndpointClient";
 import ApiClientBase from "@/infrastructure/apiClients/apiClientBase/ApiClientBase";
+import { ListingsEndpointClient } from "@/infrastructure/apiClients/airBnbApiClient/brokers/ListingsEndpointClient";
 
 export class AirBnbApiClient {
     private readonly client: ApiClientBase;
@@ -12,11 +13,11 @@ export class AirBnbApiClient {
             baseURL: this.baseUrl
         });
 
-        // this.locations = new LocationEndpointsClient(this.client);
-        this.listingCategories = new ListingCategoriesEndpointsClients(this.client);
+        this.listingCategories = new ListingsCategoryEndpointClient(this.client);
+        this.listings = new ListingsEndpointClient(this.client);
     }
 
-    // public locations: LocationEndpointsClient;
+    public listingCategories: ListingsCategoryEndpointClient;
 
-    public listingCategories: ListingCategoriesEndpointsClients;
+    public listings: ListingsEndpointClient;
 }

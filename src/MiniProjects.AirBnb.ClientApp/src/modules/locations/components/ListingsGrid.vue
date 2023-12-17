@@ -9,4 +9,43 @@
 </template>
 <script setup lang="ts">
 import ListingCard from "@/modules/locations/components/ListingCard.vue";
+import { defineProps, nextTick, onBeforeMount, onMounted, type PropType, ref, watch } from "vue";
+// import type { CallbackModel } from "@/infrastructure/models/CallbackModel";
+// import { v4 as uuidv4 } from 'uuid';
+import { ListingFilter } from "@/modules/locations/models/ListingFilter";
+import { AirBnbApiClient } from "@/infrastructure/apiClients/airBnbApiClient/brokers/AirBnbApiClient";
+import type { Listing } from "@/modules/locations/models/Listing";
+
+const airBnbApiClient = new AirBnbApiClient();
+
+const listings = ref<Array<Listing>>([]);
+
+const pageSize = ref<number>(20);
+const pageToken = ref<number>(1);
+
+const props = defineProps({
+    selectedCategoryId: {
+        type: String,
+        required: true
+    }
+});
+
+const loadListingsAsync = async (categoryId: string) => {
+    const categories = props.selectedCategoryId !== "" ? [props.selectedCategoryId] : [];
+    const filter = new ListingFilter(pageSize.value, pageToken.value, categories);
+    const response = await airBnbApiClient.listings.getAsync(filter);
+    if (response.response) {
+        listings.value = response.response;
+    }
+};
+
+watch(() => props.selectedCategoryId, async () => {
+    await loadListingsAsync(props.selectedCategoryId);
+});
+
+// onMounted(async () => {
+//     await nextTick(async () => await loadListingsAsync(props.selectedCategoryId));
+// })
+
+
 </script>

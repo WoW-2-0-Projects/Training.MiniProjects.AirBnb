@@ -29,9 +29,10 @@
 <script setup lang="ts">
 
 const props = defineProps({
-    isMobile: Boolean,
-    required: false,
-    disabled: false,
+    isMobile: {
+        type: Boolean,
+        required: true
+    }
 });
 
 </script>
