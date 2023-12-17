@@ -1,6 +1,8 @@
-﻿namespace AirBnb.Domain.Entities;
+﻿using AirBnb.Domain.Common.Entities;
 
-public class Listing
+namespace AirBnb.Domain.Entities;
+
+public class Listing : Entity
 {
     
 }

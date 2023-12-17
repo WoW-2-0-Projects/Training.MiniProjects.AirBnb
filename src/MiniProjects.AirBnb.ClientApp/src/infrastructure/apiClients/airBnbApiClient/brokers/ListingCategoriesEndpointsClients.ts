@@ -1,5 +1,5 @@
-import type ApiClientBase from "@/infrastructures/apiClients/apiClientBase/ApiClientBase";
-import type { LocationCategory } from "@/modules/locations/models/LocationCategory";
+import type ApiClientBase from "@/infrastructure/apiClients/apiClientBase/ApiClientBase";
+import { ListingCategory } from "@/modules/locations/models/ListingCategory";
 
 export class ListingCategoriesEndpointsClients {
     private client: ApiClientBase;
@@ -9,6 +9,6 @@ export class ListingCategoriesEndpointsClients {
     }
 
     public async getAsync() {
-        return await this.client.getAsync<Array<LocationCategory>>("api/locations/categories");
+        return await this.client.getAsync<Array<ListingCategory>>("api/listings/categories");
     }
 }
