@@ -1,9 +1,12 @@
 ﻿using System.Reflection;
 using AirBnb.Api.Data;
+using AirBnb.Application.Listings.Services;
 using AirBnb.Application.Locations.Services;
 using AirBnb.Infrastructure.Common.Caching.Brokers;
-using AirBnb.Infrastructure.Common.Settings;
+using AirBnb.Infrastructure.Common.Caching.Settings;
+using AirBnb.Infrastructure.ListingCategories.Services;
 using AirBnb.Infrastructure.Locations.Services;
+using AirBnb.Infrastructure.StorageFiles.Settings;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.DataContexts;
 using AirBnb.Persistence.Repositories;
@@ -71,11 +74,28 @@ public static partial class HostConfiguration
 
         # region Locations
 
-        // register repositories
+        // Register repositories
         builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 
-        // register foundation data access services
+        // Register foundation data access services
         builder.Services.AddScoped<ILocationService, LocationService>();
+
+        #endregion
+
+        #region Listing Categories
+
+        // Register repositories
+        builder.Services.AddScoped<IListingCategoryRepository, ListingCategoryRepository>();
+
+        // Register foundation data access services
+        builder.Services.AddScoped<IListingCategoryService, ListingCategoryService>();
+
+        #endregion
+
+        #region Storage files
+
+        builder.Services.Configure<StorageFileSettings>(builder.Configuration.GetSection(nameof(StorageFileSettings)))
+            .Configure<ApiSettings>(builder.Configuration.GetSection(nameof(ApiSettings)));
 
         #endregion
 
@@ -105,6 +125,18 @@ public static partial class HostConfiguration
         var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
         using var scope = scopeFactory.CreateScope();
         await scope.ServiceProvider.SeedDataAsync();
+
+        return app;
+    }
+
+    /// <summary>
+    /// Configures the middleware to use media infrastructure.
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
+    /// <returns>The <see cref="WebApplication"/> instance.</returns>
+    private static WebApplication UseMediaInfrastructure(this WebApplication app)
+    {
+        app.UseStaticFiles();
 
         return app;
     }
