@@ -103,6 +103,30 @@ public static partial class HostConfiguration
     }
 
     /// <summary>
+    /// Adds cors security
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
+    /// <returns>The <see cref="WebApplicationBuilder"/> instance.</returns>
+    private static WebApplicationBuilder AddCorsSecurity(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddCors(
+            options =>
+            {
+                options.AddDefaultPolicy(
+                    policyBuilder =>
+                    {
+                        policyBuilder.AllowAnyOrigin();
+                        policyBuilder.AllowAnyMethod();
+                        policyBuilder.AllowAnyHeader();
+                    }
+                );
+            }
+        );
+
+        return builder;
+    }
+
+    /// <summary>
     /// Adds route and controller
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
@@ -137,6 +161,18 @@ public static partial class HostConfiguration
     private static WebApplication UseMediaInfrastructure(this WebApplication app)
     {
         app.UseStaticFiles();
+
+        return app;
+    }
+
+    /// <summary>
+    /// Configures the middleware to use cors security.
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
+    /// <returns>The <see cref="WebApplication"/> instance.</returns>
+    private static WebApplication UseCorsSecurity(this WebApplication app)
+    {
+        app.UseCors();
 
         return app;
     }

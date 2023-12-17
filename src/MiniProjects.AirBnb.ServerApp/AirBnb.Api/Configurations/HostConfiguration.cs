@@ -4,7 +4,12 @@ public static partial class HostConfiguration
 {
     public static ValueTask<WebApplicationBuilder> ConfigureAsync(this WebApplicationBuilder builder)
     {
-        builder.AddMappers().AddCaching().AddBusinessLogicInfrastructure().AddExposers();
+        builder
+            .AddMappers()
+            .AddCaching()
+            .AddBusinessLogicInfrastructure()
+            .AddCorsSecurity()
+            .AddExposers();
 
         return new(builder);
     }
@@ -13,7 +18,10 @@ public static partial class HostConfiguration
     {
         await app.SeedDataAsync();
 
-        app.UseMediaInfrastructure().UseExposers();
+        app
+            .UseCorsSecurity()
+            .UseMediaInfrastructure()
+            .UseExposers();
 
         return app;
     }
