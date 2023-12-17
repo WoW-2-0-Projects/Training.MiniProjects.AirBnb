@@ -1,5 +1,4 @@
-﻿using AirBnb.Domain.Common.Caching;
-using AirBnb.Domain.Common.Query;
+﻿using AirBnb.Domain.Common.Query;
 using AirBnb.Domain.Entities;
 using AirBnb.Domain.Enums;
 
