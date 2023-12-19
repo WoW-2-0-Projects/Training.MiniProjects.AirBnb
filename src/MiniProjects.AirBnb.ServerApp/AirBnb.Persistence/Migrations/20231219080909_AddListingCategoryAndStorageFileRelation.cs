@@ -12,7 +12,7 @@ namespace AirBnb.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ListingCategories",
+                name: "ListingCategory",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -21,9 +21,9 @@ namespace AirBnb.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ListingCategories", x => x.Id);
+                    table.PrimaryKey("PK_ListingCategory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ListingCategories_StorageFiles_Id",
+                        name: "FK_ListingCategory_StorageFiles_Id",
                         column: x => x.Id,
                         principalTable: "StorageFiles",
                         principalColumn: "Id",
@@ -35,7 +35,7 @@ namespace AirBnb.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ListingCategories");
+                name: "ListingCategory");
         }
     }
 }

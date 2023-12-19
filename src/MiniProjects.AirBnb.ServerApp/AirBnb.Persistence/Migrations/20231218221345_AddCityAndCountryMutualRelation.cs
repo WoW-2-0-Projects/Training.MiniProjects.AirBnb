@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AirBnb.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddLocation : Migration
+    public partial class AddCityAndCountryMutualRelation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,9 +17,9 @@ namespace AirBnb.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    Code = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true),
                     Type = table.Column<int>(type: "integer", nullable: false),
-                    ParentId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Code = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {

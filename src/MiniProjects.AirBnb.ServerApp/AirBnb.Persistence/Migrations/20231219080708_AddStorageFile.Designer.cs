@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AirBnb.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231215194015_AddStorageFile")]
+    [Migration("20231219080708_AddStorageFile")]
     partial class AddStorageFile
     {
         /// <inheritdoc />
@@ -31,26 +31,21 @@ namespace AirBnb.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Code")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uuid");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.ToTable("Locations", (string)null);
 
-                    b.ToTable("Locations");
+                    b.HasDiscriminator<int>("Type");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("AirBnb.Domain.Entities.StorageFile", b =>
@@ -72,14 +67,37 @@ namespace AirBnb.Persistence.Migrations
                     b.ToTable("StorageFiles");
                 });
 
-            modelBuilder.Entity("AirBnb.Domain.Entities.Location", b =>
+            modelBuilder.Entity("AirBnb.Domain.Entities.City", b =>
                 {
-                    b.HasOne("AirBnb.Domain.Entities.Location", null)
+                    b.HasBaseType("AirBnb.Domain.Entities.Location");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("AirBnb.Domain.Entities.Country", b =>
+                {
+                    b.HasBaseType("AirBnb.Domain.Entities.Location");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("AirBnb.Domain.Entities.City", b =>
+                {
+                    b.HasOne("AirBnb.Domain.Entities.Country", null)
                         .WithMany("Cities")
                         .HasForeignKey("ParentId");
                 });
 
-            modelBuilder.Entity("AirBnb.Domain.Entities.Location", b =>
+            modelBuilder.Entity("AirBnb.Domain.Entities.Country", b =>
                 {
                     b.Navigation("Cities");
                 });
