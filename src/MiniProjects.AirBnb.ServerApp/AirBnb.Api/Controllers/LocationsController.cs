@@ -8,19 +8,19 @@ namespace AirBnb.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class LocationsController(IMapper mapper, ILocationService locationService) : ControllerBase
+public class LocationsController(IMapper mapper) : ControllerBase
 {
     [HttpGet("countries")]
-    public async Task<IActionResult> GetCountries([FromQuery] CountryFilter cityFilter)
+    public async Task<IActionResult> GetCountries([FromQuery] CountryFilter cityFilter, [FromServices] ICountryService countryService)
     {
-        var result = await locationService.GetAsync(cityFilter.ToQuerySpecification());
+        var result = await countryService.GetAsync(cityFilter.ToQuerySpecification());
         return result.Any() ? Ok(mapper.Map<IEnumerable<CountryDto>>(result)) : NoContent();
     }
 
     [HttpGet("cities")]
-    public async ValueTask<IActionResult> GetCities([FromQuery] CityFilter cityFilter)
+    public async ValueTask<IActionResult> GetCities([FromQuery] CityFilter cityFilter, [FromServices] ICityService cityService)
     {
-        var result = await locationService.GetAsync(cityFilter.ToQuerySpecification());
+        var result = await cityService.GetAsync(cityFilter.ToQuerySpecification());
         return result.Any() ? Ok(mapper.Map<IEnumerable<CityDto>>(result)) : NoContent();
     }
 }
