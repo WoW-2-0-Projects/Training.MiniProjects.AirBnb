@@ -7,18 +7,16 @@ namespace AirBnb.Application.Locations.Models;
 /// <summary>
 /// Represents a city filter
 /// </summary>
-public class CityFilter : FilterPagination, IQueryConvertible<Location>
+public class CityFilter : FilterPagination, IQueryConvertible<City>
 {
     /// <summary>
     /// Gets the search keyword for city filtering
     /// </summary>
     public string? SearchKeyword { get; init; }
 
-    public QuerySpecification<Location> ToQuerySpecification()
+    public QuerySpecification<City> ToQuerySpecification()
     {
-        var querySpecification = new QuerySpecification<Location>(PageSize, PageToken, true, GetHashCode());
-
-        querySpecification.FilteringOptions.Add(location => location.Type == LocationType.City);
+        var querySpecification = new QuerySpecification<City>(PageSize, PageToken, true, GetHashCode());
 
         if (SearchKeyword is not null)
             querySpecification.FilteringOptions.Add(location => location.Name.ToLower().Contains(SearchKeyword.ToLower()));

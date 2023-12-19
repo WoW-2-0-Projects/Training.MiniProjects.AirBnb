@@ -8,15 +8,15 @@ using AirBnb.Persistence.Repositories.Interfaces;
 namespace AirBnb.Persistence.Repositories;
 
 /// <summary>
-/// Represents a repository for managing locations.
+/// Provides city repository functionalities
 /// </summary>
-public class LocationRepository(AppDbContext dbContext, ICacheBroker cacheBroker) : EntityRepositoryBase<Location, AppDbContext>(
+public class CityRepository(AppDbContext dbContext, ICacheBroker cacheBroker) : EntityRepositoryBase<City, AppDbContext>(
     dbContext,
     cacheBroker,
     new CacheEntryOptions()
-), ILocationRepository
+), ICityRepository
 {
-    public new ValueTask<IList<Location>> GetAsync(QuerySpecification<Location> querySpecification, CancellationToken cancellationToken = default)
+    public new ValueTask<IList<City>> GetAsync(QuerySpecification<City> querySpecification, CancellationToken cancellationToken = default)
     {
         return base.GetAsync(querySpecification, cancellationToken);
     }

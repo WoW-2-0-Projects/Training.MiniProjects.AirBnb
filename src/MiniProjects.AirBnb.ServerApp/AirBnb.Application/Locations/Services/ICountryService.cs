@@ -1,18 +1,18 @@
 ﻿using AirBnb.Domain.Common.Query;
 using AirBnb.Domain.Entities;
 
-namespace AirBnb.Persistence.Repositories.Interfaces;
+namespace AirBnb.Application.Locations.Services;
 
 /// <summary>
-/// Defines location repository functionalities
+/// Defines country foundation service functionalities.
 /// </summary>
-public interface ILocationRepository
+public interface ICountryService
 {
     /// <summary>
-    /// Retrieves a list of locations based on the specified query specification asynchronously.
+    /// Retrieves a list of countries based on the provided query specification.
     /// </summary>
     /// <param name="querySpecification">The query specification to apply.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>Collection of matching locations.</returns>
-    ValueTask<IList<Location>> GetAsync(QuerySpecification<Location> querySpecification, CancellationToken cancellationToken = default);
+    ValueTask<IList<Country>> GetAsync(QuerySpecification<Country> querySpecification, CancellationToken cancellationToken = default);
 }

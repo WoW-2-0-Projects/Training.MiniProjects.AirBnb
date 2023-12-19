@@ -7,7 +7,7 @@ namespace AirBnb.Application.Locations.Models;
 /// <summary>
 /// Represents a country filter
 /// </summary>
-public class CountryFilter : FilterPagination, IQueryConvertible<Location>
+public class CountryFilter : FilterPagination, IQueryConvertible<Country>
 {
     /// <summary>
     /// Gets the search keyword for country filtering
@@ -16,14 +16,12 @@ public class CountryFilter : FilterPagination, IQueryConvertible<Location>
 
     public bool IncludeCities { get; set; }
 
-    public QuerySpecification<Location> ToQuerySpecification()
+    public QuerySpecification<Country> ToQuerySpecification()
     {
-        var querySpecification = new QuerySpecification<Location>(PageSize, PageToken, true, GetHashCode());
+        var querySpecification = new QuerySpecification<Country>(PageSize, PageToken, true, GetHashCode());
 
         if (IncludeCities)
             querySpecification.IncludingOptions.Add(location => location.Cities);
-
-        querySpecification.FilteringOptions.Add(location => location.Type == LocationType.Country);
 
         if (SearchKeyword is not null)
             querySpecification.FilteringOptions.Add(location => location.Name.ToLower().Contains(SearchKeyword.ToLower()));
