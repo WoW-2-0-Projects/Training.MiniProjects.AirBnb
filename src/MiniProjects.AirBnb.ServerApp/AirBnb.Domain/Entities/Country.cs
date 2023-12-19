@@ -1,10 +1,14 @@
-﻿namespace AirBnb.Domain.Entities;
+﻿using AirBnb.Domain.Enums;
+
+namespace AirBnb.Domain.Entities;
 
 /// <summary>
 /// Represents country as a location
 /// </summary>
 public class Country : Location
 {
+    public Country() => Type = LocationType.Country;
+    
     /// <summary>
     /// Gets or sets location code
     /// </summary>

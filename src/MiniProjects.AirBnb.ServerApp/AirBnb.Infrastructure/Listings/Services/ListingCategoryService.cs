@@ -3,7 +3,7 @@ using AirBnb.Domain.Common.Query;
 using AirBnb.Domain.Entities;
 using AirBnb.Persistence.Repositories.Interfaces;
 
-namespace AirBnb.Infrastructure.ListingCategories.Services;
+namespace AirBnb.Infrastructure.Listings.Services;
 
 /// <summary>
 /// Represents location category foundation service functionality
