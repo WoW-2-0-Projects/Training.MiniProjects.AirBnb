@@ -43,8 +43,7 @@ public static class SeedDataExtensions
         var countriesFileName = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "SeedData", "Countries.json");
 
         // Retrieve countries
-        var countries = JsonConvert.DeserializeObject<List<Location>>(await File.ReadAllTextAsync(countriesFileName))!;
-        countries.ForEach(country => country.Type = LocationType.Country);
+        var countries = JsonConvert.DeserializeObject<List<Country>>(await File.ReadAllTextAsync(countriesFileName))!;
 
         await dbContext.AddRangeAsync(countries);
     }
@@ -54,13 +53,11 @@ public static class SeedDataExtensions
         var citiesFileName = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "SeedData", "Cities.json");
 
         // Retrieve cities
-        var cities = JsonConvert.DeserializeObject<List<Location>>(await File.ReadAllTextAsync(citiesFileName))!;
-        cities.ForEach(city => city.Type = LocationType.City);
+        var cities = JsonConvert.DeserializeObject<List<City>>(await File.ReadAllTextAsync(citiesFileName))!;
 
         // Add countries and cities
         await dbContext.AddRangeAsync(cities);
     }
-
 
     /// <summary>
     /// Seeds the database with locations.

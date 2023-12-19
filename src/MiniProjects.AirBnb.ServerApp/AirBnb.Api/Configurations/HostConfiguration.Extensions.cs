@@ -4,7 +4,7 @@ using AirBnb.Application.Listings.Services;
 using AirBnb.Application.Locations.Services;
 using AirBnb.Infrastructure.Common.Caching.Brokers;
 using AirBnb.Infrastructure.Common.Caching.Settings;
-using AirBnb.Infrastructure.ListingCategories.Services;
+using AirBnb.Infrastructure.Listings.Services;
 using AirBnb.Infrastructure.Locations.Services;
 using AirBnb.Infrastructure.StorageFiles.Settings;
 using AirBnb.Persistence.Caching.Brokers;
@@ -85,10 +85,14 @@ public static partial class HostConfiguration
         #region Listing Categories
 
         // Register repositories
-        builder.Services.AddScoped<IListingCategoryRepository, ListingCategoryRepository>();
+        builder.Services
+            .AddScoped<IListingCategoryRepository, ListingCategoryRepository>()
+            .AddScoped<IListingRepository, ListingRepository>();
 
         // Register foundation data access services
-        builder.Services.AddScoped<IListingCategoryService, ListingCategoryService>();
+        builder.Services
+            .AddScoped<IListingCategoryService, ListingCategoryService>()
+            .AddScoped<IListingService, ListingService>();
 
         #endregion
 
