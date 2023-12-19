@@ -85,14 +85,10 @@ public static partial class HostConfiguration
         #region Listing Categories
 
         // Register repositories
-        builder.Services
-            .AddScoped<IListingCategoryRepository, ListingCategoryRepository>()
-            .AddScoped<IListingRepository, ListingRepository>();
+        builder.Services.AddScoped<IListingCategoryRepository, ListingCategoryRepository>();
 
         // Register foundation data access services
-        builder.Services
-            .AddScoped<IListingCategoryService, ListingCategoryService>()
-            .AddScoped<IListingService, ListingService>();
+        builder.Services.AddScoped<IListingCategoryService, ListingCategoryService>();
 
         #endregion
 
@@ -100,6 +96,19 @@ public static partial class HostConfiguration
 
         builder.Services.Configure<StorageFileSettings>(builder.Configuration.GetSection(nameof(StorageFileSettings)))
             .Configure<ApiSettings>(builder.Configuration.GetSection(nameof(ApiSettings)));
+
+        #endregion
+
+        #region Listings
+
+        // Register repositories
+        builder.Services.AddScoped<IListingRepository, ListingRepository>();
+
+        // Register foundation data access services
+        builder.Services.AddScoped<IListingService, ListingService>();
+
+        // Register orchestration services
+        builder.Services.AddScoped<IListingOrchestrationService, ListingOrchestrationService>();
 
         #endregion
 
