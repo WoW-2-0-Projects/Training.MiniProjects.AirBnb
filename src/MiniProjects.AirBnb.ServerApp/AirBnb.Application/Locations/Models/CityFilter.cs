@@ -14,9 +14,9 @@ public class CityFilter : FilterPagination, IQueryConvertible<City>
     /// </summary>
     public string? SearchKeyword { get; init; }
 
-    public QuerySpecification<City> ToQuerySpecification()
+    public QuerySpecification<City> ToQuerySpecification(bool asNoTracking = false)
     {
-        var querySpecification = new QuerySpecification<City>(PageSize, PageToken, true, GetHashCode());
+        var querySpecification = new QuerySpecification<City>(PageSize, PageToken, asNoTracking, GetHashCode());
 
         if (SearchKeyword is not null)
             querySpecification.FilteringOptions.Add(location => location.Name.ToLower().Contains(SearchKeyword.ToLower()));

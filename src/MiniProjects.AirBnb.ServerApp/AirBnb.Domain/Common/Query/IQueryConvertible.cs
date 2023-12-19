@@ -9,5 +9,5 @@ public interface IQueryConvertible<TSource>
     /// Converts to query specification.
     /// </summary>
     /// <returns>Query specification</returns>
-    QuerySpecification<TSource> ToQuerySpecification();
+    QuerySpecification<TSource> ToQuerySpecification(bool asNoTracking = false);
 }

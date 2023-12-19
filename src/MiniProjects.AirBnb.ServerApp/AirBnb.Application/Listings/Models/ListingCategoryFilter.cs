@@ -8,10 +8,10 @@ namespace AirBnb.Application.Listings.Models;
 /// </summary>
 public class ListingCategoryFilter : FilterPagination, IQueryConvertible<ListingCategory>
 {
-    public QuerySpecification<ListingCategory> ToQuerySpecification()
+    public QuerySpecification<ListingCategory> ToQuerySpecification(bool asNoTracking = false)
     {
         // Get all listing categories   
-        var querySpecification = new QuerySpecification<ListingCategory>(int.MaxValue, 1, true, GetHashCode());
+        var querySpecification = new QuerySpecification<ListingCategory>(int.MaxValue, 1, asNoTracking, GetHashCode());
 
         querySpecification.IncludingOptions.Add(listingCategory => listingCategory.ImageStorageFile);
 

@@ -16,9 +16,9 @@ public class CountryFilter : FilterPagination, IQueryConvertible<Country>
 
     public bool IncludeCities { get; set; }
 
-    public QuerySpecification<Country> ToQuerySpecification()
+    public QuerySpecification<Country> ToQuerySpecification(bool asNoTracking = false)
     {
-        var querySpecification = new QuerySpecification<Country>(PageSize, PageToken, true, GetHashCode());
+        var querySpecification = new QuerySpecification<Country>(PageSize, PageToken, asNoTracking, GetHashCode());
 
         if (IncludeCities)
             querySpecification.IncludingOptions.Add(location => location.Cities);

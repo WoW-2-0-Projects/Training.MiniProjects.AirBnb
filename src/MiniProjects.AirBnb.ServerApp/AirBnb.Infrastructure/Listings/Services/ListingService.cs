@@ -6,7 +6,7 @@ using AirBnb.Persistence.Repositories.Interfaces;
 namespace AirBnb.Infrastructure.Listings.Services;
 
 /// <summary>
-/// Represents location category foundation service functionality
+/// Provides location category foundation service functionality
 /// </summary>
 public class ListingService(IListingRepository listingRepository) : IListingService
 {
