@@ -75,10 +75,10 @@ public static partial class HostConfiguration
         # region Locations
 
         // Register repositories
-        builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+        builder.Services.AddScoped<ICityRepository, CityRepository>().AddScoped<ICountryRepository, CountryRepository>();
 
         // Register foundation data access services
-        builder.Services.AddScoped<ILocationService, LocationService>();
+        builder.Services.AddScoped<ICityService, CityService>().AddScoped<ICountryService, CountryService>();
 
         #endregion
 
@@ -173,6 +173,19 @@ public static partial class HostConfiguration
     private static WebApplication UseCorsSecurity(this WebApplication app)
     {
         app.UseCors();
+
+        return app;
+    }
+
+    /// <summary>
+    /// Applies migrations to the database.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    private static async Task<WebApplication> ApplyMigrationsAsync(this WebApplication app)
+    {
+        var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+        await scopeFactory.MigrateAsync<AppDbContext>();
 
         return app;
     }

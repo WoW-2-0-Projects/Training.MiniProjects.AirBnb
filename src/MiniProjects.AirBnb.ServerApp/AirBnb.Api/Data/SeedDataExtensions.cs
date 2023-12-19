@@ -20,11 +20,11 @@ public static class SeedDataExtensions
         var dbContext = serviceProvider.GetRequiredService<AppDbContext>();
         var webHostEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
 
-        if (!await dbContext.Locations.AnyAsync())
-            await SeedLocationsAsync(dbContext, webHostEnvironment);
+        if (!await dbContext.Countries.AnyAsync())
+            await SeedCountriesAsync(dbContext, webHostEnvironment);
 
-        // if (!await dbContext.StorageFiles.AnyAsync())
-        //     await SeedStorageFilesAsync(dbContext, webHostEnvironment);
+        if (!await dbContext.Cities.AnyAsync())
+            await SeedCitiesAsync(dbContext, webHostEnvironment);
 
         if (!await dbContext.ListingCategories.AnyAsync())
             await SeedListingCategoriesAsync(dbContext, webHostEnvironment);
@@ -38,25 +38,29 @@ public static class SeedDataExtensions
     /// </summary>
     /// <param name="dbContext">Database context to seed data</param>
     /// <param name="webHostEnvironment">Web application environment</param>
-    private static async ValueTask SeedLocationsAsync(AppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+    private static async ValueTask SeedCountriesAsync(AppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
     {
         var countriesFileName = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "SeedData", "Countries.json");
-        var citiesFileName = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "SeedData", "Cities.json");
 
         // Retrieve countries
         var countries = JsonConvert.DeserializeObject<List<Location>>(await File.ReadAllTextAsync(countriesFileName))!;
         countries.ForEach(country => country.Type = LocationType.Country);
+
+        await dbContext.AddRangeAsync(countries);
+    }
+
+    public static async ValueTask SeedCitiesAsync(AppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+    {
+        var citiesFileName = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "SeedData", "Cities.json");
 
         // Retrieve cities
         var cities = JsonConvert.DeserializeObject<List<Location>>(await File.ReadAllTextAsync(citiesFileName))!;
         cities.ForEach(city => city.Type = LocationType.City);
 
         // Add countries and cities
-        await dbContext.Locations.AddRangeAsync(countries);
-        await dbContext.Locations.AddRangeAsync(cities);
-
-        await dbContext.SaveChangesAsync();
+        await dbContext.AddRangeAsync(cities);
     }
+
 
     /// <summary>
     /// Seeds the database with locations.
@@ -82,7 +86,5 @@ public static class SeedDataExtensions
 
         // Add listing categories
         await dbContext.ListingCategories.AddRangeAsync(listingCategories);
-
-        await dbContext.SaveChangesAsync();
     }
 }
