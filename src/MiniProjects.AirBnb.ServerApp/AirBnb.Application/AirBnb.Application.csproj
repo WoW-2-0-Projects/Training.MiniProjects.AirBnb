@@ -10,4 +10,12 @@
       <ProjectReference Include="..\AirBnb.Domain\AirBnb.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Common\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    </ItemGroup>
+
 </Project>

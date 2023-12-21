@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 using AirBnb.Api.Data;
+using AirBnb.Application.Common.Serializers;
 using AirBnb.Application.Listings.Services;
 using AirBnb.Application.Locations.Services;
 using AirBnb.Application.RequestContexts.Brokers;
 using AirBnb.Infrastructure.Common.Caching.Brokers;
 using AirBnb.Infrastructure.Common.Caching.Settings;
+using AirBnb.Infrastructure.Common.Serializers;
 using AirBnb.Infrastructure.Listings.Services;
 using AirBnb.Infrastructure.Locations.Services;
 using AirBnb.Infrastructure.RequestContexts.Brokers;
@@ -25,6 +27,14 @@ public static partial class HostConfiguration
     {
         Assemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Select(Assembly.Load).ToList();
         Assemblies.Add(Assembly.GetExecutingAssembly());
+    }
+    
+    private static WebApplicationBuilder AddSerializers(this WebApplicationBuilder builder)
+    {
+        // register json serialization settings
+        builder.Services.AddSingleton<IJsonSerializationSettingsProvider, JsonSerializationSettingsProvider>();
+
+        return builder;
     }
 
     /// <summary>

@@ -12,9 +12,10 @@ public interface ICacheBroker
     /// </summary>
     /// <param name="key">The cache key of entry.</param>
     /// <param name="value">Cache entry to be stored.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <typeparam name="T">The type of the value to be stored.</typeparam>
     /// <returns> Cache entry with given key if exists, otherwise null. </returns>
-    ValueTask<bool> TryGetAsync<T>(string key, out T? value);
+    ValueTask<bool> TryGetAsync<T>(string key, out T? value, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sets the value of an item in the cache.
@@ -22,6 +23,7 @@ public interface ICacheBroker
     /// <param name="key">The cache key for entry.</param>
     /// <param name="value">Cache entry to be stored.</param>
     /// <param name="entryOptions">The cache entry options.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <typeparam name="T">The type of the value to be stored.</typeparam>
-    ValueTask SetAsync<T>(string key, T value, CacheEntryOptions? entryOptions = default);
+    ValueTask SetAsync<T>(string key, T value, CacheEntryOptions? entryOptions = default, CancellationToken cancellationToken = default);
 }

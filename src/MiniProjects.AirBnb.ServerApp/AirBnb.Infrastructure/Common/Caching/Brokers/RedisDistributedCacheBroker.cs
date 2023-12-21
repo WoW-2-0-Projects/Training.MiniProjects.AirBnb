@@ -1,4 +1,5 @@
-﻿using AirBnb.Infrastructure.Common.Caching.Settings;
+﻿using AirBnb.Application.Common.Serializers;
+using AirBnb.Infrastructure.Common.Caching.Settings;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
 using Force.DeepCloner;
@@ -11,7 +12,11 @@ namespace AirBnb.Infrastructure.Common.Caching.Brokers;
 /// <summary>
 /// Provides functionality of Redis cache broker for distributed caching
 /// </summary>
-public class RedisDistributedCacheBroker(IOptions<CacheSettings> cacheSettings, IDistributedCache distributedCache) : ICacheBroker
+public class RedisDistributedCacheBroker(
+    IOptions<CacheSettings> cacheSettings,
+    IDistributedCache distributedCache,
+    IJsonSerializationSettingsProvider jsonSerializationSettingsProvider
+) : ICacheBroker
 {
     private readonly DistributedCacheEntryOptions _entryOptions = new()
     {
@@ -19,13 +24,13 @@ public class RedisDistributedCacheBroker(IOptions<CacheSettings> cacheSettings, 
         SlidingExpiration = TimeSpan.FromSeconds(cacheSettings.Value.SlidingExpirationInSeconds)
     };
 
-    public ValueTask<bool> TryGetAsync<T>(string key, out T? value)
+    public ValueTask<bool> TryGetAsync<T>(string key, out T? value, CancellationToken cancellationToken = default)
     {
         var foundEntry = distributedCache.GetString(key);
 
         if (foundEntry is not null)
         {
-            value = JsonConvert.DeserializeObject<T>(foundEntry);
+            value = JsonConvert.DeserializeObject<T>(foundEntry, jsonSerializationSettingsProvider.Get());
             return ValueTask.FromResult(true);
         }
 
@@ -33,9 +38,14 @@ public class RedisDistributedCacheBroker(IOptions<CacheSettings> cacheSettings, 
         return ValueTask.FromResult(false);
     }
 
-    public async ValueTask SetAsync<T>(string key, T value, CacheEntryOptions? entryOptions = default)
+    public async ValueTask SetAsync<T>(string key, T value, CacheEntryOptions? entryOptions = default, CancellationToken cancellationToken = default)
     {
-        await distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(value), GetCacheEntryOptions(entryOptions));
+        await distributedCache.SetStringAsync(
+            key,
+            JsonConvert.SerializeObject(value, jsonSerializationSettingsProvider.Get()),
+            GetCacheEntryOptions(entryOptions),
+            cancellationToken
+        );
     }
 
     /// <summary>
