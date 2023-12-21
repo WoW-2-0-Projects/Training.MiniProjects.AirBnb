@@ -2,16 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e6395e3-e518-4779-944c-b40bd3e97128" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/public/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/infrastructure/apiClients/airBnbApiClient/brokers/AirBnbApiClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/infrastructure/apiClients/airBnbApiClient/brokers/AirBnbApiClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/infrastructure/apiClients/airBnbApiClient/brokers/ListingCategoriesEndpointsClients.ts" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/infrastructure/apiClients/airBnbApiClient/brokers/ListingCategoriesEndpointsClients.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/components/ListingCategoryContainer.vue" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/components/ListingCategoryContainer.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/components/ListingsCategoryTab.vue" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/components/ListingsCategoryTab.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/models/LocationCategory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/models/ListingCategory.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Configurations/MigrationExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Mappers/CityMapper.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Mappers/CountryMapper.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Services/ICountryService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Domain/Entities/City.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Domain/Entities/Country.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Infrastructure/Locations/Services/CityService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/EntityConfigurations/CityConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/EntityConfigurations/CountryConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/Repositories/CountryRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/Repositories/Interfaces/ICountryRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ClientApp/src/modules/locations/models/Location.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Configurations/HostConfiguration.Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Configurations/HostConfiguration.Extensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Configurations/HostConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Configurations/HostConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Controllers/LocationsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Controllers/LocationsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Data/SeedDataExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Data/SeedDataExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Api/Mappers/LocationMapper.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Models/CityFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Models/CityFilter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Models/CountryFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Models/CountryFilter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Services/ILocationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Application/Locations/Services/ICityService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Domain/Entities/Listing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Domain/Entities/Listing.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Domain/Entities/Location.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Domain/Entities/Location.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Infrastructure/Locations/Services/LocationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Infrastructure/Locations/Services/CountryService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/DataContexts/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/DataContexts/AppDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/EntityConfigurations/LocationConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/EntityConfigurations/LocationConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/Repositories/Interfaces/ILocationRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/Repositories/Interfaces/ICityRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/Repositories/LocationRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MiniProjects.AirBnb.ServerApp/AirBnb.Persistence/Repositories/CityRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,23 +37,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2ZfscFrazDjh8UhInDWOQeUMCeI" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -47,6 +63,7 @@
       <option name="presentableId" value="Default" />
       <updated>1702824545456</updated>
       <workItem from="1702824546562" duration="11000" />
+      <workItem from="1702887561563" duration="2000" />
     </task>
     <servers />
   </component>
