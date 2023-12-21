@@ -2,10 +2,12 @@
 using AirBnb.Api.Data;
 using AirBnb.Application.Listings.Services;
 using AirBnb.Application.Locations.Services;
+using AirBnb.Application.RequestContexts.Brokers;
 using AirBnb.Infrastructure.Common.Caching.Brokers;
 using AirBnb.Infrastructure.Common.Caching.Settings;
 using AirBnb.Infrastructure.Listings.Services;
 using AirBnb.Infrastructure.Locations.Services;
+using AirBnb.Infrastructure.RequestContexts.Brokers;
 using AirBnb.Infrastructure.StorageFiles.Settings;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.DataContexts;
@@ -122,19 +124,27 @@ public static partial class HostConfiguration
     /// <returns>The <see cref="WebApplicationBuilder"/> instance.</returns>
     private static WebApplicationBuilder AddCorsSecurity(this WebApplicationBuilder builder)
     {
+        var clientSettings = builder.Configuration.GetSection("ClientSettings").Get<ApiSettings>()!;
+        
         builder.Services.AddCors(
             options =>
             {
                 options.AddDefaultPolicy(
                     policyBuilder =>
                     {
-                        policyBuilder.AllowAnyOrigin();
-                        policyBuilder.AllowAnyMethod();
-                        policyBuilder.AllowAnyHeader();
+                        policyBuilder.WithOrigins(clientSettings.BaseAddress).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                     }
                 );
             }
         );
+
+        return builder;
+    }
+
+    private static WebApplicationBuilder AddRequestContextTools(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IRequestContextProvider, RequestContextProvider>();
 
         return builder;
     }
