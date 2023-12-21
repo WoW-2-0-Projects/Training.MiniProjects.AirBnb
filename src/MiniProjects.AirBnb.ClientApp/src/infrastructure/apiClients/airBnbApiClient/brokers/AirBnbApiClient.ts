@@ -10,7 +10,8 @@ export class AirBnbApiClient {
         this.baseUrl = "https://localhost:7174";
 
         this.client = new ApiClientBase({
-            baseURL: this.baseUrl
+            baseURL: this.baseUrl,
+            withCredentials: true
         });
 
         this.listingCategories = new ListingsCategoryEndpointClient(this.client);

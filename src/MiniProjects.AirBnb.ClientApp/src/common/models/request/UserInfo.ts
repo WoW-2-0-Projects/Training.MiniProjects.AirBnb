@@ -1,4 +1,4 @@
-import { UserLocation } from "@/common/models/request/Location";
+import { Coordinates } from "@/common/models/request/Location";
 import type { Region } from "@/common/models/request/Region";
 
 /*
@@ -9,7 +9,7 @@ export class UserInfo {
     /*
     User location
      */
-    public location!: UserLocation;
+    public coordinates!: Coordinates;
 
     /*
     User region

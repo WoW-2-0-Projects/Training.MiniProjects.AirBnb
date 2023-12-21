@@ -1,7 +1,7 @@
 /*
 Represents a location on the map
  */
-export class UserLocation {
+export class Coordinates {
 
     /*
     Location latitude

@@ -2,6 +2,7 @@ import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } fro
 import axios from "axios";
 import { ApiResponse } from "@/infrastructure/apiClients/apiClientBase/ApiResponse";
 import type { ProblemDetails } from "@/infrastructure/apiClients/apiClientBase/ProblemDetails";
+import { UserInfoService } from "@/infrastructure/service/UserInfoService";
 
 export default class ApiClientBase {
     public readonly client: AxiosInstance;
@@ -9,6 +10,16 @@ export default class ApiClientBase {
 
     constructor(config: AxiosRequestConfig) {
         this.client = axios.create(config);
+        const userInfoService = new UserInfoService();
+
+        // user info interceptor
+        this.client.interceptors.request.use((config) => {
+
+            if (!userInfoService.isUserInfoSet())
+                userInfoService.set();
+
+            return config;
+        });
 
         // register interceptors
         this.client.interceptors.response.use(<TResponse>(response: AxiosResponse<TResponse>) => {

@@ -17,8 +17,8 @@ export class UserInfoService {
                     const userInfo = this.getUserInfo();
 
                     // Set location and region
-                    userInfo.location.latitude = position.coords.latitude;
-                    userInfo.location.longitude = position.coords.longitude;
+                    userInfo.coordinates.latitude = position.coords.latitude;
+                    userInfo.coordinates.longitude = position.coords.longitude;
                     userInfo.region.language = navigator.language;
                     userInfo.region.city = response.data.city;
                     userInfo.region.countryName = response.data.countryName;
@@ -49,7 +49,7 @@ export class UserInfoService {
      */
     private getUserInfo(): UserInfo {
         return this.cookieBroker.isSet('user-info') ? JSON.parse(this.cookieBroker.get('user-info')!) : {
-            location: {},
+            coordinates: {},
             region: {}
         };
     }
