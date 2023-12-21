@@ -31,6 +31,9 @@ namespace AirBnb.Persistence.Migrations
                     b.Property<DateOnly>("BuiltDate")
                         .HasColumnType("date");
 
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -40,6 +43,8 @@ namespace AirBnb.Persistence.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Listings");
                 });
@@ -125,6 +130,15 @@ namespace AirBnb.Persistence.Migrations
                         .HasColumnType("character varying(64)");
 
                     b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("AirBnb.Domain.Entities.Listing", b =>
+                {
+                    b.HasOne("AirBnb.Domain.Entities.ListingCategory", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AirBnb.Domain.Entities.ListingCategory", b =>

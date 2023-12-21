@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AirBnb.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddListing : Migration
+    public partial class AddListingAndListingCateogryRelation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,12 +35,24 @@ namespace AirBnb.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     BuiltDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false)
+                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Listings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Listings_ListingCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "ListingCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Listings_CategoryId",
+                table: "Listings",
+                column: "CategoryId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ListingCategories_StorageFiles_Id",

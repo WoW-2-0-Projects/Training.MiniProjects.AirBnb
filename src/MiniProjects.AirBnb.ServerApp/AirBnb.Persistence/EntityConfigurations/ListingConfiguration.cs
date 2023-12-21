@@ -9,5 +9,7 @@ public class ListingConfiguration : IEntityTypeConfiguration<Listing>
     public void Configure(EntityTypeBuilder<Listing> builder)
     {
         builder.Property(listing => listing.Name).IsRequired().HasMaxLength(255);
+
+        builder.HasOne<ListingCategory>().WithMany().HasForeignKey(listing => listing.CategoryId);
     }
 }

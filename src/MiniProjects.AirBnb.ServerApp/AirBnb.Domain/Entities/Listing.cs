@@ -18,7 +18,7 @@ public class Listing : Entity
     public DateOnly BuiltDate { get; set; } = default!;
 
     /// <summary>
-    /// Gets or sets the price per night for a property
+    /// Gets or sets listing category Id
     /// </summary>
-    public decimal PricePerNight { get; set; } = default!;
+    public Guid CategoryId { get; set; }
 }
