@@ -5,7 +5,7 @@
 /// </summary>
 public class Address
 {
-    public string City { get; set; } = default!;
+    public string? City { get; set; } 
     
     /// <summary>
     /// Gets or sets the city Id
