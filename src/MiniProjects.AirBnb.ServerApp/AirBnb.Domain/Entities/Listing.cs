@@ -18,6 +18,16 @@ public class Listing : Entity
     public DateOnly BuiltDate { get; set; } = default!;
 
     /// <summary>
+    /// Gets or sets the address property.
+    /// </summary>
+    public Address Address { get; set; } = default!;
+
+    /// <summary>
+    /// Gets or sets the price per night for the property.
+    /// </summary>
+    public Money PricePerNight { get; set; } = default!;
+
+    /// <summary>
     /// Gets or sets listing category Id
     /// </summary>
     public Guid CategoryId { get; set; }
