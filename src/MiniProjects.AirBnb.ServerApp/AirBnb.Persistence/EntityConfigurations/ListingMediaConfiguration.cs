@@ -12,5 +12,10 @@ public class ListingMediaConfiguration : IEntityTypeConfiguration<ListingMedia>
             .HasOne(listingMedia => listingMedia.StorageFile)
             .WithOne()
             .HasForeignKey<ListingMedia>(listingMedia => listingMedia.StorageFileId);
+        
+        builder
+            .HasOne(listingMedia => listingMedia.Listing)
+            .WithMany(listingMedia => listingMedia.ImagesStorageFile)
+            .HasForeignKey(listingMedia => listingMedia.ListingId);
     }
 }

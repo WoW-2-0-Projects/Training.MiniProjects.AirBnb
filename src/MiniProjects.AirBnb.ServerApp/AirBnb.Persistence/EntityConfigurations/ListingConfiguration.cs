@@ -10,7 +10,7 @@ public class ListingConfiguration : IEntityTypeConfiguration<Listing>
     {
         builder.Property(listing => listing.Name).IsRequired().HasMaxLength(255);
 
-        builder.HasOne<ListingCategory>().WithMany().HasForeignKey(listing => listing.CategoryId);
+        builder.HasOne(listing => listing.Category).WithMany().HasForeignKey(listing => listing.CategoryId);
 
         builder.OwnsOne(listing => listing.Address);
         builder.OwnsOne(listing => listing.PricePerNight);

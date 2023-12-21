@@ -15,7 +15,7 @@ public class Listing : Entity
     /// <summary>
     /// Gets or sets the date when an object was built
     /// </summary>
-    public DateOnly BuiltDate { get; set; } = default!;
+    public DateOnly BuiltDate { get; set; }
 
     /// <summary>
     /// Gets or sets the address property.
@@ -31,4 +31,14 @@ public class Listing : Entity
     /// Gets or sets listing category Id
     /// </summary>
     public Guid CategoryId { get; set; }
+
+    /// <summary>
+    /// Gets or sets listing category
+    /// </summary>
+    public ListingCategory Category { get; set; } = default!;
+
+    /// <summary>
+    /// Gets or sets listing images
+    /// </summary>
+    public IList<ListingMedia> ImagesStorageFile { get; set; } = new List<ListingMedia>();
 }
