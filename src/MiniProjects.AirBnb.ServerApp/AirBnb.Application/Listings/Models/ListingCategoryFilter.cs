@@ -6,30 +6,12 @@ namespace AirBnb.Application.Listings.Models;
 /// <summary>
 /// Represents a listing category filter
 /// </summary>
-public class ListingCategoryFilter : FilterPagination, IQueryConvertible<ListingCategory>
+public class ListingCategoryFilter : FilterPagination
 {
-    public QuerySpecification<ListingCategory> ToQuerySpecification(bool asNoTracking = false)
+    public ListingCategoryFilter()
     {
-        // Get all listing categories   
-        var querySpecification = new QuerySpecification<ListingCategory>(int.MaxValue, 1, asNoTracking, GetHashCode());
-
-        querySpecification.IncludingOptions.Add(listingCategory => listingCategory.ImageStorageFile);
-
-        return querySpecification;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is ListingCategoryFilter listingCategoryFilter && listingCategoryFilter.GetHashCode() == GetHashCode();
-    }
-
-    public override int GetHashCode()
-    {
-        var hashCode = new HashCode();
-
-        hashCode.Add(PageSize);
-        hashCode.Add(PageToken);
-
-        return hashCode.ToHashCode();
+        // Set pagination to max values
+        PageSize = int.MaxValue;
+        PageToken = 1;
     }
 }

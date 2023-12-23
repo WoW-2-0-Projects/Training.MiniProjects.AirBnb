@@ -1,4 +1,5 @@
 ﻿using AirBnb.Application.Common.Serializers;
+using AirBnb.Domain.Common.Caching;
 using AirBnb.Infrastructure.Common.Caching.Settings;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
@@ -30,7 +31,7 @@ public class RedisDistributedCacheBroker(
     public async ValueTask<T?> GetAsync<T>(string key)
     {
         var value = await distributedCache.GetStringAsync(key);
-        
+
         return value is not null ? JsonConvert.DeserializeObject<T>(value) : default;
     }
 
@@ -64,9 +65,9 @@ public class RedisDistributedCacheBroker(
         );
     }
 
-    public IQueryCacheResolver GetCacheResolver(CacheEntryOptions? entryOptions = default)
+    public IQueryCacheBroker GetCacheResolver(CacheEntryOptions? entryOptions = default)
     {
-        return new QueryCacheResolver(GetCacheEntryOptions(entryOptions), this);
+        return new QueryCacheBroker(GetCacheEntryOptions(entryOptions), this);
     }
 
     /// <summary>
@@ -76,13 +77,14 @@ public class RedisDistributedCacheBroker(
     /// <returns>The distributed cache entry options.</returns>
     private CacheEntryOptions GetCacheEntryOptions(CacheEntryOptions? entryOptions)
     {
-        if (entryOptions == default || (!entryOptions.AbsoluteExpirationRelativeToNow.HasValue && !entryOptions.SlidingExpiration.HasValue))
+        if (!entryOptions.HasValue ||
+            (!entryOptions.Value.AbsoluteExpirationRelativeToNow.HasValue && !entryOptions.Value.SlidingExpiration.HasValue))
             return _entryOptions;
 
         var currentEntryOptions = _entryOptions.DeepClone();
 
-        currentEntryOptions.AbsoluteExpirationRelativeToNow = entryOptions.AbsoluteExpirationRelativeToNow;
-        currentEntryOptions.SlidingExpiration = entryOptions.SlidingExpiration;
+        currentEntryOptions.AbsoluteExpirationRelativeToNow = entryOptions.Value.AbsoluteExpirationRelativeToNow;
+        currentEntryOptions.SlidingExpiration = entryOptions.Value.SlidingExpiration;
 
         return currentEntryOptions;
     }

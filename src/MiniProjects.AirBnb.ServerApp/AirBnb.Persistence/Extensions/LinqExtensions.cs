@@ -1,6 +1,8 @@
 using AirBnb.Domain.Common.Entities;
 using AirBnb.Domain.Common.Query;
+using AirBnb.Persistence.Caching.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace AirBnb.Persistence.Extensions;
 
@@ -19,8 +21,7 @@ public static class LinqExtensions
     public static IQueryable<TSource> ApplySpecification<TSource>(this IQueryable<TSource> source, QuerySpecification<TSource> querySpecification)
         where TSource : class, IEntity
     {
-        source = source
-            .ApplyPredicates(querySpecification)
+        source = source.ApplyPredicates(querySpecification)
             .ApplyOrdering(querySpecification)
             .ApplyIncluding(querySpecification)
             .ApplyPagination(querySpecification);
@@ -83,8 +84,10 @@ public static class LinqExtensions
     public static IQueryable<TSource> ApplyIncluding<TSource>(this IQueryable<TSource> source, QuerySpecification<TSource> querySpecification)
         where TSource : class, IEntity
     {
-        querySpecification.IncludingOptions.ForEach(includeOption => source = source.Include(includeOption));
-    
+        // TODO : optimize
+        var directIncludes = querySpecification.IncludingOptions.Where(includeOption => !includeOption.ToString().Contains('.')).ToList();
+        var nonDirectIncludes = querySpecification.IncludingOptions.Where(includeOption => includeOption.ToString().Contains('.')).ToList();
+
         return source;
     }
 
@@ -158,5 +161,31 @@ public static class LinqExtensions
     {
         return source.Skip((int)((querySpecification.PaginationOptions.PageToken - 1) * querySpecification.PaginationOptions.PageSize))
             .Take((int)querySpecification.PaginationOptions.PageSize);
+    }
+
+    /// <summary>
+    /// Applies pagination to queryable source
+    /// </summary>
+    /// <typeparam name="TSource">The type of elements in the queryable source.</typeparam>
+    /// <param name="source">Queryable source to apply specifications to.</param>
+    /// <param name="filterPagination">The filter pagination to apply.</param>
+    /// <returns>Same queryable resource with pagination applied</returns>
+    public static IQueryable<TSource> ApplyPagination<TSource>(this IQueryable<TSource> source, FilterPagination filterPagination)
+        where TSource : IEntity
+    {
+        return source.Skip((int)((filterPagination.PageToken - 1) * filterPagination.PageSize)).Take((int)filterPagination.PageSize);
+    }
+
+    /// <summary>
+    /// Applies pagination to queryable source
+    /// </summary>
+    /// <typeparam name="TSource">The type of elements in the enumerable source.</typeparam>
+    /// <param name="source">Enumerable source to apply specifications to.</param>
+    /// <param name="filterPagination">The filter pagination to apply.</param>
+    /// <returns>Same enumerable resource with pagination applied</returns>
+    public static IEnumerable<TSource> ApplyPagination<TSource>(this IEnumerable<TSource> source, FilterPagination filterPagination)
+        where TSource : IEntity
+    {
+        return source.Skip((int)((filterPagination.PageToken - 1) * filterPagination.PageSize)).Take((int)filterPagination.PageSize);
     }
 }

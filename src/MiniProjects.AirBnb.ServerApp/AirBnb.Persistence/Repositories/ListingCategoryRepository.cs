@@ -1,4 +1,4 @@
-﻿using AirBnb.Domain.Common.Query;
+﻿using System.Linq.Expressions;
 using AirBnb.Domain.Entities;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
@@ -13,11 +13,6 @@ namespace AirBnb.Persistence.Repositories;
 public class ListingCategoryRepository(AppDbContext dbContext, ICacheBroker cacheBroker)
     : EntityRepositoryBase<ListingCategory, AppDbContext>(dbContext, cacheBroker, new CacheEntryOptions()), IListingCategoryRepository
 {
-    public new ValueTask<IList<ListingCategory>> GetAsync(
-        QuerySpecification<ListingCategory> querySpecification,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return base.GetAsync(querySpecification, cancellationToken);
-    }
+    public new IQueryable<ListingCategory> Get(Expression<Func<ListingCategory, bool>>? predicate = null, bool asNoTracking = false) =>
+        base.Get(predicate, asNoTracking);
 }

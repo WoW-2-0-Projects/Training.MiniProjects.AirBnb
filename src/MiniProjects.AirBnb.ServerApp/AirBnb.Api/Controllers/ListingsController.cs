@@ -1,4 +1,4 @@
-﻿using AirBnb.Api.Models.Dtos;
+using AirBnb.Api.Models.Dtos;
 using AirBnb.Application.Listings.Models;
 using AirBnb.Application.Listings.Services;
 using AutoMapper;
@@ -23,7 +23,7 @@ public class ListingsController(IMapper mapper) : ControllerBase
     [HttpGet("categories")]
     public async Task<IActionResult> GetListingCategories([FromServices] IListingCategoryService listingCategoryService)
     {
-        var result = await listingCategoryService.GetAsync(new ListingCategoryFilter().ToQuerySpecification());
+        var result = await listingCategoryService.GetAsync(new ListingCategoryFilter());
         return result.Any() ? Ok(mapper.Map<IEnumerable<ListingCategoryDto>>(result)) : NoContent();
     }
 }

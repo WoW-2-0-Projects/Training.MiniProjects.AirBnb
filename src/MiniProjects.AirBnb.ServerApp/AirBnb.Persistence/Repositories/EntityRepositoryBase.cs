@@ -20,6 +20,13 @@ public class EntityRepositoryBase<TEntity, TContext>(TContext dbContext, ICacheB
     where TEntity : class, IEntity where TContext : DbContext
 {
     protected TContext DbContext => dbContext;
+    protected DbSetAsyncQueryProviderResolver<TEntity> AsyncQueryProviderResolver => new(DbContext.Set<TEntity>());
+
+    protected IQueryable<TEntity> QuerySource =>
+        cacheEntryOptions is null
+            ? DbContext.Set<TEntity>()
+            : DbContext.Set<TEntity>()
+                .AddCaching(AsyncQueryProviderResolver, new EfCoreExpressionCacheKeyResolver(), cacheBroker.GetCacheResolver(cacheEntryOptions));
 
     /// <summary>
     /// Retrieves a list of entities based on query specification.
@@ -29,22 +36,36 @@ public class EntityRepositoryBase<TEntity, TContext>(TContext dbContext, ICacheB
     /// <returns>A list of entities that match the given query specification.</returns>
     protected async ValueTask<IList<TEntity>> GetAsync(QuerySpecification<TEntity> querySpecification, CancellationToken cancellationToken = default)
     {
-        var foundEntities = new List<TEntity>();
         var cacheKey = querySpecification.CacheKey;
 
-        if (cacheEntryOptions is null || !await cacheBroker.TryGetAsync<List<TEntity>>(cacheKey, out var cachedEntities))
+        if (cacheEntryOptions is not null)
         {
-            var initialQuery = DbContext.Set<TEntity>().AsQueryable();
-
-            if (querySpecification.AsNoTracking) initialQuery = initialQuery.AsNoTracking();
-            initialQuery = initialQuery.ApplySpecification(querySpecification);
-            foundEntities = await initialQuery.ToListAsync(cancellationToken);
-            if (cacheEntryOptions is not null) await cacheBroker.SetAsync(cacheKey, foundEntities, cacheEntryOptions);
+            var test = await cacheBroker.TryGetAsync<List<TEntity>>(cacheKey, cancellationToken);
+            if (test.Result) return test.Value!;
         }
-        else if (cachedEntities is not null)
-            foundEntities = cachedEntities;
+
+        var initialQuery = DbContext.Set<TEntity>().AsQueryable();
+
+        if (querySpecification.AsNoTracking) initialQuery = initialQuery.AsNoTracking();
+        initialQuery = initialQuery.ApplySpecification(querySpecification);
+        var foundEntities = await initialQuery.ToListAsync(cancellationToken);
+
+        if (cacheEntryOptions is not null) await cacheBroker.SetAsync(cacheKey, foundEntities, cacheEntryOptions, cancellationToken);
 
         return foundEntities;
+    }
+
+    /// <summary>
+    /// Retrieves a list of entities based on query specification.
+    /// </summary>
+    /// <param name="predicate">Predicate of query to be applied as filter</param>
+    /// <param name="asNoTracking">Determines whether to track the query result or not </param>
+    /// <returns>A list of entities that match the given query specification.</returns>
+    protected IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? predicate = null, bool asNoTracking = false)
+    {
+        var initialQuery = asNoTracking ? QuerySource.AsNoTracking() : QuerySource;
+
+        return predicate is null ? initialQuery : initialQuery.Where(predicate);
     }
 
     /// <summary>
