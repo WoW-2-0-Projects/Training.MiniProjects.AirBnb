@@ -3,7 +3,7 @@ namespace AirBnb.Persistence.Caching.Models;
 /// <summary>
 /// Defines query cache resolver with type fixes
 /// </summary>
-public interface IQueryCacheResolver
+public interface IQueryCacheBroker
 {
     /// <summary>
     /// Retrieves the cache entry with given key with resolved actual type

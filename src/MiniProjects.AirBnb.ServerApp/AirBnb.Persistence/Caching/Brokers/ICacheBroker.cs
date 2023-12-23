@@ -1,4 +1,5 @@
-﻿using AirBnb.Persistence.Caching.Models;
+﻿using AirBnb.Domain.Common.Caching;
+using AirBnb.Persistence.Caching.Models;
 
 namespace AirBnb.Persistence.Caching.Brokers;
 
@@ -52,5 +53,5 @@ public interface ICacheBroker
     /// </summary>
     /// <param name="entryOptions">The cache entry options.</param>
     /// <returns>Created cache resolver</returns>
-    IQueryCacheResolver GetCacheResolver(CacheEntryOptions? entryOptions = default);
+    IQueryCacheBroker GetCacheResolver(CacheEntryOptions? entryOptions = default);
 }

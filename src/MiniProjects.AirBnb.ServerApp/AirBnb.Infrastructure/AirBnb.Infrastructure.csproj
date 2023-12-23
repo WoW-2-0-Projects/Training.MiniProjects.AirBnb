@@ -12,9 +12,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.1" />
+        <PackageReference Include="AutoMapper" Version="12.0.1"/>
         <PackageReference Include="DeepCloner" Version="0.10.4"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2"/>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="ListingBookings\Mappers\"/>
     </ItemGroup>
 
 </Project>

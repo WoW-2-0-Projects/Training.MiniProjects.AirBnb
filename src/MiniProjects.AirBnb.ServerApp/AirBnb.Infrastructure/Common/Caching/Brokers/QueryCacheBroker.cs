@@ -1,4 +1,5 @@
-﻿using AirBnb.Domain.Common.Collections;
+﻿using AirBnb.Domain.Common.Caching;
+using AirBnb.Domain.Common.Collections;
 using AirBnb.Domain.Extensions;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
@@ -8,7 +9,7 @@ namespace AirBnb.Infrastructure.Common.Caching.Brokers;
 /// <summary>
 /// Defines query cache resolver with type fixes
 /// </summary>
-public readonly struct QueryCacheResolver(CacheEntryOptions cacheEntryOptions, ICacheBroker cacheBroker) : IQueryCacheResolver
+public readonly struct QueryCacheBroker(CacheEntryOptions cacheEntryOptions, ICacheBroker cacheBroker) : IQueryCacheBroker
 {
     // TODO: Optimize this
     public async Task<TResult> GetOrSetAsync<TResult, TActual>(string key, Func<Task<TResult>> valueFactory) where TResult : class
