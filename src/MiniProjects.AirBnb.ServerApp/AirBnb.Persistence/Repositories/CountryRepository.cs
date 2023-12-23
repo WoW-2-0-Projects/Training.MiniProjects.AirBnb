@@ -1,4 +1,4 @@
-﻿using AirBnb.Domain.Common.Query;
+﻿using System.Linq.Expressions;
 using AirBnb.Domain.Entities;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
@@ -16,8 +16,6 @@ public class CountryRepository(AppDbContext dbContext, ICacheBroker cacheBroker)
     new CacheEntryOptions()
 ), ICountryRepository
 {
-    public new ValueTask<IList<Country>> GetAsync(QuerySpecification<Country> querySpecification, CancellationToken cancellationToken = default)
-    {
-        return base.GetAsync(querySpecification, cancellationToken);
-    }
+    public new IQueryable<Country> Get(Expression<Func<Country, bool>>? predicate = null, bool asNoTracking = false) =>
+        base.Get(predicate, asNoTracking);
 }

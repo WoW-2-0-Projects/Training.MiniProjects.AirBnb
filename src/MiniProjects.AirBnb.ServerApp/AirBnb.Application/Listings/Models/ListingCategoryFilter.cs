@@ -1,5 +1,4 @@
 ﻿using AirBnb.Domain.Common.Query;
-using AirBnb.Domain.Entities;
 
 namespace AirBnb.Application.Listings.Models;
 

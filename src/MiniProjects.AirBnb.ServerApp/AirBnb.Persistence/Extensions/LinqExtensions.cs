@@ -21,7 +21,8 @@ public static class LinqExtensions
     public static IQueryable<TSource> ApplySpecification<TSource>(this IQueryable<TSource> source, QuerySpecification<TSource> querySpecification)
         where TSource : class, IEntity
     {
-        source = source.ApplyPredicates(querySpecification)
+        source = source
+            .ApplyPredicates(querySpecification)
             .ApplyOrdering(querySpecification)
             .ApplyIncluding(querySpecification)
             .ApplyPagination(querySpecification);

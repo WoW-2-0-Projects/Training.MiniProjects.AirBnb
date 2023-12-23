@@ -65,6 +65,11 @@ public class EntityRepositoryBase<TEntity, TContext>(TContext dbContext, ICacheB
     {
         var initialQuery = asNoTracking ? QuerySource.AsNoTracking() : QuerySource;
 
+        if (predicate is not null)
+            initialQuery = initialQuery.Where(predicate);
+
+        return initialQuery;
+
         return predicate is null ? initialQuery : initialQuery.Where(predicate);
     }
 

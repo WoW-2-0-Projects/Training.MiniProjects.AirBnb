@@ -1,4 +1,5 @@
-﻿using AirBnb.Domain.Common.Query;
+﻿using AirBnb.Application.Common.Queries.Models;
+using AirBnb.Application.Locations.Models;
 using AirBnb.Domain.Entities;
 
 namespace AirBnb.Application.Locations.Services;
@@ -9,10 +10,15 @@ namespace AirBnb.Application.Locations.Services;
 public interface ICountryService
 {
     /// <summary>
-    /// Retrieves a list of countries based on the provided query specification.
+    /// Retrieves a list of countries based on the provided filter
     /// </summary>
-    /// <param name="querySpecification">The query specification to apply.</param>
+    /// <param name="filter">The filter to apply.</param>
+    /// <param name="queryOptions">Query options</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Collection of matching locations.</returns>
-    ValueTask<IList<Country>> GetAsync(QuerySpecification<Country> querySpecification, CancellationToken cancellationToken = default);
+    /// <returns>Collection of matching countries.</returns>
+    ValueTask<IList<Country>> GetAsync(
+        CountryFilter filter,
+        QueryOptions queryOptions = new(),
+        CancellationToken cancellationToken = default
+    );
 }

@@ -1,4 +1,5 @@
-﻿using AirBnb.Domain.Common.Query;
+﻿using AirBnb.Application.Common.Queries.Models;
+using AirBnb.Application.Locations.Models;
 using AirBnb.Domain.Entities;
 
 namespace AirBnb.Application.Locations.Services;
@@ -9,10 +10,11 @@ namespace AirBnb.Application.Locations.Services;
 public interface ICityService
 {
     /// <summary>
-    /// Retrieves a list of cities based on the provided query specification.
+    /// Retrieves a list of cities based on the provided filter
     /// </summary>
-    /// <param name="querySpecification">The query specification to apply.</param>
+    /// <param name="filter">The filter to apply.</param>
+    /// <param name="queryOptions">Query options</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>Collection of matching cities.</returns>
-    ValueTask<IList<City>> GetAsync(QuerySpecification<City> querySpecification, CancellationToken cancellationToken = default);
+    ValueTask<IList<City>> GetAsync(CityFilter filter, QueryOptions queryOptions = new(), CancellationToken cancellationToken = default);
 }
