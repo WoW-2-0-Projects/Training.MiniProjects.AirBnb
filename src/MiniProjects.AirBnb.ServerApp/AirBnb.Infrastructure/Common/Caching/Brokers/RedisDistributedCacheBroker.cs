@@ -2,7 +2,9 @@
 using AirBnb.Infrastructure.Common.Caching.Settings;
 using AirBnb.Persistence.Caching.Brokers;
 using AirBnb.Persistence.Caching.Models;
+using AutoMapper;
 using Force.DeepCloner;
+using Microsoft.AspNetCore.Components.Forms.Mapping;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -13,29 +15,43 @@ namespace AirBnb.Infrastructure.Common.Caching.Brokers;
 /// Provides functionality of Redis cache broker for distributed caching
 /// </summary>
 public class RedisDistributedCacheBroker(
+    IMapper mapper,
+    IJsonSerializationSettingsProvider jsonSerializationSettingsProvider,
     IOptions<CacheSettings> cacheSettings,
-    IDistributedCache distributedCache,
-    IJsonSerializationSettingsProvider jsonSerializationSettingsProvider
+    IDistributedCache distributedCache
 ) : ICacheBroker
 {
-    private readonly DistributedCacheEntryOptions _entryOptions = new()
+    private readonly CacheEntryOptions _entryOptions = new()
     {
         AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(cacheSettings.Value.AbsoluteExpirationInSeconds),
         SlidingExpiration = TimeSpan.FromSeconds(cacheSettings.Value.SlidingExpirationInSeconds)
     };
 
-    public ValueTask<bool> TryGetAsync<T>(string key, out T? value, CancellationToken cancellationToken = default)
+    public async ValueTask<T?> GetAsync<T>(string key)
     {
-        var foundEntry = distributedCache.GetString(key);
+        var value = await distributedCache.GetStringAsync(key);
+        
+        return value is not null ? JsonConvert.DeserializeObject<T>(value) : default;
+    }
 
-        if (foundEntry is not null)
-        {
-            value = JsonConvert.DeserializeObject<T>(foundEntry, jsonSerializationSettingsProvider.Get());
-            return ValueTask.FromResult(true);
-        }
+    public async ValueTask<T?> GetOrSetAsync<T>(string key, Func<Task<T>> valueFactory, CacheEntryOptions? entryOptions = default)
+    {
+        var cachedValue = await distributedCache.GetStringAsync(key);
+        if (cachedValue is not null) return JsonConvert.DeserializeObject<T>(cachedValue);
 
-        value = default;
-        return ValueTask.FromResult(false);
+        var value = await valueFactory();
+        await SetAsync(key, await valueFactory(), entryOptions);
+
+        return value;
+    }
+
+    public async ValueTask<(bool Result, T? Value)> TryGetAsync<T>(string key, CancellationToken cancellationToken = default)
+    {
+        var foundEntry = await distributedCache.GetStringAsync(key, token: cancellationToken);
+
+        return foundEntry is not null
+            ? (true, JsonConvert.DeserializeObject<T>(foundEntry, jsonSerializationSettingsProvider.Get()))
+            : (false, default);
     }
 
     public async ValueTask SetAsync<T>(string key, T value, CacheEntryOptions? entryOptions = default, CancellationToken cancellationToken = default)
@@ -43,9 +59,14 @@ public class RedisDistributedCacheBroker(
         await distributedCache.SetStringAsync(
             key,
             JsonConvert.SerializeObject(value, jsonSerializationSettingsProvider.Get()),
-            GetCacheEntryOptions(entryOptions),
+            mapper.Map<DistributedCacheEntryOptions>(GetCacheEntryOptions(entryOptions)),
             cancellationToken
         );
+    }
+
+    public IQueryCacheResolver GetCacheResolver(CacheEntryOptions? entryOptions = default)
+    {
+        return new QueryCacheResolver(GetCacheEntryOptions(entryOptions), this);
     }
 
     /// <summary>
@@ -53,7 +74,7 @@ public class RedisDistributedCacheBroker(
     /// </summary>
     /// <param name="entryOptions">Given cache entry options.</param>
     /// <returns>The distributed cache entry options.</returns>
-    private DistributedCacheEntryOptions GetCacheEntryOptions(CacheEntryOptions? entryOptions)
+    private CacheEntryOptions GetCacheEntryOptions(CacheEntryOptions? entryOptions)
     {
         if (entryOptions == default || (!entryOptions.AbsoluteExpirationRelativeToNow.HasValue && !entryOptions.SlidingExpiration.HasValue))
             return _entryOptions;
