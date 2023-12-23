@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
+using AirBnb.Domain.Constants;
 using AirBnb.Domain.Extensions;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace AirBnb.Persistence.Caching.Models;
 
@@ -11,9 +11,11 @@ public readonly struct EfCoreExpressionCacheKeyResolver : IExpressionCacheKeyRes
 {
     public string GetCacheKey<T>(Expression expression, Type? actualType = default)
     {
+        var resultType = typeof(T);
+        var isCollection = resultType.IsCollection();
+
         if (actualType is null)
         {
-            var resultType = typeof(T);
             actualType = resultType;
 
             // Determine actual type
@@ -22,9 +24,13 @@ public readonly struct EfCoreExpressionCacheKeyResolver : IExpressionCacheKeyRes
             if (actualType.IsCollection()) actualType = resultType.GetGenericArgument();
         }
 
-        var expressionEqualityComparer = ExpressionEqualityComparer.Instance;
-        var hashCode = expressionEqualityComparer.GetHashCode(expression);
-        var postFix = actualType!.IsCollection() ? "Multiple" : "Single";
+        var instance = new ExpressionHashCodeVisitor();
+        instance.Visit(expression);
+        var hashCode = instance.HashSum;
+
+        var postFix = isCollection
+            ? InfrastructureConstants.CachingConstants.MultipleEntryPrefix
+            : InfrastructureConstants.CachingConstants.SingleEntryPrefix;
         return $"{actualType!.Name}_{postFix}_{hashCode}";
     }
 }

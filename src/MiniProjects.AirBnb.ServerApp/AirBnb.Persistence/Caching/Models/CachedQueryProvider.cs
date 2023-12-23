@@ -9,33 +9,36 @@ namespace AirBnb.Persistence.Caching.Models;
 /// </summary>
 /// <param name="queryProvider">The base query provider</param>
 /// <param name="queryCacheBroker">The query cache resolver used for caching</param>
-public class CachedQueryProvider(
+public class CachedQueryProvider<TSource, TQueryable>(
+    CachedQueryable<TSource, TQueryable> cachedQueryable,
     IAsyncQueryProvider queryProvider,
     IExpressionCacheKeyResolver expressionCacheKeyResolver,
     IQueryCacheBroker queryCacheBroker
-) : IAsyncQueryProvider
+) : IAsyncQueryProvider where TQueryable : IQueryable<TSource>, IAsyncEnumerable<TSource>
 {
     public IQueryable CreateQuery(Expression expression)
     {
-        Console.WriteLine("queryable created");
-        return queryProvider.CreateQuery(expression);
+        return new CachedQueryable<TSource, TQueryable>(cachedQueryable, expression);
     }
 
     public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
     {
-        Console.WriteLine("queryable created");
+        var test = typeof(TElement);
+
+        // Use cached queryable if element type is same as source type
+        if (typeof(TElement) == typeof(TSource))
+            return (IQueryable<TElement>)new CachedQueryable<TSource, TQueryable>(cachedQueryable, expression);
+
         return queryProvider.CreateQuery<TElement>(expression);
     }
 
     public object? Execute(Expression expression)
     {
-        Console.WriteLine("queryable executed");
         return queryProvider.Execute(expression);
     }
 
     public TResult Execute<TResult>(Expression expression)
     {
-        Console.WriteLine("queryable executed");
         return queryProvider.Execute<TResult>(expression);
     }
 
