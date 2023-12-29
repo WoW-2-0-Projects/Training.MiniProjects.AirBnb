@@ -10,7 +10,7 @@ namespace AirBnb.Application.Listings.Services;
 public interface IListingCategoryService
 {
     /// <summary>
-    /// Retrieves a list of locations categories based on the provided query specification.
+    /// Retrieves a list of locations categories based on the provided filter
     /// </summary>
     /// <param name="listingCategoryFilter">The filter to apply.</param>
     /// <param name="queryOptions">Query options</param>

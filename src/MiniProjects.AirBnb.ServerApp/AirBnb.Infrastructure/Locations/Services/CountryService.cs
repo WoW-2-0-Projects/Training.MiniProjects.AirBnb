@@ -22,7 +22,7 @@ public class CountryService(ICountryRepository countryRepository) : ICountryServ
         var initialQuery = countryRepository.Get(asNoTracking: queryOptions.AsNoTracking);
 
         if (filter.IncludeCities)
-            initialQuery.Include(country => country.Cities);
+            initialQuery = initialQuery.Include(country => country.Cities);
 
         if (filter.SearchKeyword is not null)
             initialQuery = initialQuery.Where(country => country.Name.ToLower().Contains(filter.SearchKeyword.ToLower()));

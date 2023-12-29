@@ -1,4 +1,5 @@
-﻿using AirBnb.Domain.Common.Query;
+﻿using System.Linq.Expressions;
+using AirBnb.Domain.Common.Query;
 using AirBnb.Domain.Entities;
 
 namespace AirBnb.Persistence.Repositories.Interfaces;
@@ -9,10 +10,10 @@ namespace AirBnb.Persistence.Repositories.Interfaces;
 public interface IListingCategoryRepository
 {
     /// <summary>
-    /// Retrieves a list of locations categories based on the specified query specification asynchronously.
+    /// Retrieves a list of listing categories based on predicate
     /// </summary>
-    /// <param name="querySpecification">The query specification to apply.</param>
-    /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Collection of matching locations categories.</returns>
-    ValueTask<IList<ListingCategory>> GetAsync(QuerySpecification<ListingCategory> querySpecification, CancellationToken cancellationToken = default);
+    /// <param name="predicate">Predicate of query to be applied as filter</param>
+    /// <param name="asNoTracking">Determines whether to track the query result or not </param>
+    /// <returns>A list of listing categories that match the given predicate.</returns>
+    IQueryable<ListingCategory> Get(Expression<Func<ListingCategory, bool>>? predicate = null, bool asNoTracking = false);
 }

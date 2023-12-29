@@ -1,5 +1,6 @@
-﻿using AirBnb.Application.Listings.Services;
-using AirBnb.Domain.Common.Query;
+﻿using System.Linq.Expressions;
+using AirBnb.Application.Common.Queries.Models;
+using AirBnb.Application.Listings.Services;
 using AirBnb.Domain.Entities;
 using AirBnb.Persistence.Repositories.Interfaces;
 
@@ -10,8 +11,6 @@ namespace AirBnb.Infrastructure.Listings.Services;
 /// </summary>
 public class ListingService(IListingRepository listingRepository) : IListingService
 {
-    public ValueTask<IList<Listing>> GetAsync(QuerySpecification<Listing> querySpecification, CancellationToken cancellationToken = default)
-    {
-        return listingRepository.GetAsync(querySpecification, cancellationToken);
-    }
+    public IQueryable<Listing> GetAsync(Expression<Func<Listing, bool>>? predicate = default, QueryOptions queryOptions = new()) =>
+        listingRepository.Get(predicate, queryOptions.AsNoTracking);
 }

@@ -1,4 +1,5 @@
-﻿using AirBnb.Domain.Common.Query;
+﻿using System.Linq.Expressions;
+using AirBnb.Application.Common.Queries.Models;
 using AirBnb.Domain.Entities;
 
 namespace AirBnb.Application.Listings.Services;
@@ -9,10 +10,10 @@ namespace AirBnb.Application.Listings.Services;
 public interface IListingService
 {
     /// <summary>
-    /// Retrieves a list of listings based on the provided query specification.
+    /// Retrieves a list of cities based on the provided filter
     /// </summary>
-    /// <param name="querySpecification">The query specification to apply.</param>
-    /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Collection of matching listings.</returns>
-    ValueTask<IList<Listing>> GetAsync(QuerySpecification<Listing> querySpecification, CancellationToken cancellationToken = default);
+    /// <param name="predicate">The predicate to apply.</param>
+    /// <param name="queryOptions">Query options</param>
+    /// <returns>Queryable of matching cities.</returns>
+    IQueryable<Listing> GetAsync(Expression<Func<Listing, bool>>? predicate = default, QueryOptions queryOptions = new());
 }
