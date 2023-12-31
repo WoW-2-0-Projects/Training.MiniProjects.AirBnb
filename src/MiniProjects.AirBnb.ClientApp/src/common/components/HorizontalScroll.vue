@@ -4,11 +4,13 @@
     <previous-button v-if="canScrollPrev" class="mb-3 theme-bg-primary hover-shadow-zero top-" @click="onPrevCategories"/>
 
     <div ref="scrollContainer" class="flex gap-6 md:gap-12 overflow-x-scroll no-scrollbar">
-        <slot v-bind="$attrs"></slot>
+      <slot v-bind="$attrs"></slot>
     </div>
 
     <!-- Next button -->
     <next-button v-if="canScrollNext" class="mb-3 theme-bg-primary hover-shadow-zero" @click="onNextCategories"/>
+
+
 
 </template>
 <script setup lang="ts">

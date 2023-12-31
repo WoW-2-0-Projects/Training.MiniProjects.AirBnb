@@ -8,10 +8,10 @@ export class AppThemeService {
      * @returns {boolean} True if dark mode is enabled, false otherwise.
      */
     public isDarkMode(): boolean {
-        if(localStorage.getItem("darkMode") !== null)
-            return localStorage.getItem("darkMode") === "true";
+        if (this.getValue() !== null)
+            return this.getValue();
 
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
 
     /**
@@ -19,9 +19,11 @@ export class AppThemeService {
      * It adds or removes the "dark" class from the document body and updates the darkMode value in localStorage.
      */
     public toggleDarkMode(): void {
-        document.body.classList.toggle("dark");
-        const dakMode= localStorage.getItem("darkMode") !== null ? localStorage.getItem("darkMode") == "true" : false;
-        localStorage.setItem("darkMode", (!dakMode).toString());
+        this.toggleDarkMode();
+
+        const darkMode = this.isDarkMode();
+        this.setValue(!darkMode);
+        // localStorage.setItem("darkMode", (!darkMode).toString());
     }
 
     /**
@@ -29,11 +31,31 @@ export class AppThemeService {
      */
     public setAppTheme(): void {
         if (this.isDarkMode()) {
-            document.body.classList.add("dark");
+            this.addValue();
         } else {
-            document.body.classList.remove("dark");
+            this.removeValue();
         }
 
-        localStorage.setItem("darkMode", this.isDarkMode.toString());
+        this.setValue(this.isDarkMode());
+    }
+
+    private getValue(): boolean {
+        return localStorage.getItem("darkMode") !== null ? localStorage.getItem("darkMode") === "true" : false;
+    }
+
+    private setValue(darkMode: boolean) {
+        localStorage.setItem("darkMode", darkMode.toString());
+    }
+
+    private addValue() {
+        document.body.classList.add("dark");
+    }
+
+    private removeValue() {
+        document.body.classList.remove("dark");
+    }
+
+    private toggleValue() {
+        document.body.classList.toggle("dark");
     }
 }

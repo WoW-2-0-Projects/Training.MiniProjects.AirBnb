@@ -23,6 +23,9 @@ export class UserInfoService {
                     userInfo.region.city = response.data.city;
                     userInfo.region.countryName = response.data.countryName;
 
+                    console.log(position.coords.latitude);
+                    console.log(position.coords.longitude);
+
                     userInfo.region.language = navigator.language;
 
                     this.setUserInfo(userInfo);
