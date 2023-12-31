@@ -5,9 +5,8 @@
 /// </summary>
 public record ListingCategoryDto
 {
-    public Guid Id { get; set; }
-
-    public string Name { get; init; } = default!;
-
+    /// <summary>
+    /// Gets the image url of the listing category.
+    /// </summary>
     public string ImageUrl { get; init; } = default!;
 }

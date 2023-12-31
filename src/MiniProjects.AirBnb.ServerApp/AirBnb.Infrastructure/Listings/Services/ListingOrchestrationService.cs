@@ -1,7 +1,7 @@
 ﻿using AirBnb.Application.Common.Queries.Models;
 using AirBnb.Application.Listings.Models;
 using AirBnb.Application.Listings.Services;
-using AirBnb.Domain.Common.Query;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirBnb.Infrastructure.Listings.Services;
 
@@ -10,12 +10,20 @@ namespace AirBnb.Infrastructure.Listings.Services;
 /// </summary>
 public class ListingOrchestrationService(IListingService listingService) : IListingOrchestrationService
 {
-    public ValueTask<IList<ListingAnalysisDetails>> GetByAvailabilityAsync(
+    public async ValueTask<IList<ListingAnalysisDetails>> GetByAvailabilityAsync(
         ListingAvailabilityFilter listingAvailabilityFilter,
         QueryOptions queryOptions = new QueryOptions(),
         CancellationToken cancellationToken = default
     )
     {
-        var listingsInitialQuery = listingService.GetAsync(queryOptions: queryOptions);
+        var listingsInitialQuery = listingService.GetAsync(listing => listing.CategoryId == listingAvailabilityFilter.CategoryId, queryOptions);
+
+        return await listingsInitialQuery.Select(
+                listing => new ListingAnalysisDetails
+                {
+                    Listing = listing
+                }
+            )
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 }

@@ -26,6 +26,9 @@ public class QuerySpecification<TSource>(uint pageSize, uint pageToken, bool asN
     /// </summary>
     public List<Expression<Func<TSource, object>>> IncludingOptions { get; } = [];
 
+    // add then include options
+    public List<Expression<Func<object, object>>> ThenIncludingOptions { get; } = [];
+
     /// <summary>
     /// Gets pagination options for query.
     /// </summary>

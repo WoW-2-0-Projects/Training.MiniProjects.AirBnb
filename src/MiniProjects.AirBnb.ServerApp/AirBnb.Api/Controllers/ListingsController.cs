@@ -1,4 +1,4 @@
-using AirBnb.Api.Models.Dtos;
+﻿using AirBnb.Api.Models.Dtos;
 using AirBnb.Application.Listings.Models;
 using AirBnb.Application.Listings.Services;
 using AutoMapper;
@@ -17,7 +17,7 @@ public class ListingsController(IMapper mapper) : ControllerBase
     )
     {
         var result = await listingCategoryService.GetByAvailabilityAsync(filter);
-        return result.Any() ? Ok(mapper.Map<IEnumerable<ListingCategoryDto>>(result)) : NoContent();
+        return result.Any() ? Ok(mapper.Map<IEnumerable<ListingAnalysisDetailsDto>>(result)) : NoContent();
     }
 
     [HttpGet("categories")]
